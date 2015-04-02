@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.terracotta.forge</groupId>
+    <artifactId>forge-parent</artifactId>
+    <version>3.17</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>org.terracotta</groupId>
+  <artifactId>tc-config-parent</artifactId>
+  <version>9.2-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>tc-config-parent</name>
+
+  <modules>
+    <module>tcconfig-schema</module>
+    <module>tc-config-parser</module>
+  </modules>
+
+  <properties>
+    <skip.testjar>true</skip.testjar>
+    <java.build.version>1.8</java.build.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.4</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.9.5</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <version>1.3</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2.1</version>
+          <executions>
+            <execution>
+              <id>assemble-sources</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <descriptors>
+                  <descriptor>${basedir}/../src/assemble/sources.xml</descriptor>
+                </descriptors>
+                <appendAssemblyId>true</appendAssemblyId>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <configuration>
+            <attach>false</attach>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>0.12.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>terracotta-releases</id>
+      <name>Terracotta Releases Repository</name>
+      <url>${terracotta-releases-url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>terracotta-snapshots</id>
+      <uniqueVersion>false</uniqueVersion>
+      <name>Terracotta Snapshots Repository</name>
+      <url>${terracotta-snapshots-url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <scm>
+    <connection>scm:svn:http://svn.terracotta.org/svn/forge/projects/tc-config-schema/trunk</connection>
+    <developerConnection>scm:svn:https://svn.terracotta.org/repo/forge/projects/tc-config-schema/trunk</developerConnection>
+  </scm>
+
+</project>

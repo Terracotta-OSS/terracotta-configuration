@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<tccon:tc-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:tccon="http://www.terracotta.org/config">
+
+  <tccon:tc-properties>
+    <tccon:property name="name1" value="blah1"/>
+  </tccon:tc-properties>
+
+  <tccon:servers secure="false">
+
+    <tccon:server host="hostname" name="hostname1" bind="0.0.0.0">
+      <tccon:logs>mylog</tccon:logs>
+      <tccon:tsa-port bind="0.0.0.0">200</tccon:tsa-port>
+      <tccon:management-port bind="0.0.0.0">210</tccon:management-port>
+      <tccon:tsa-group-port bind="0.0.0.0">220</tccon:tsa-group-port>
+    </tccon:server>
+    <tccon:client-reconnect-window>200</tccon:client-reconnect-window>
+  </tccon:servers>
+
+</tccon:tc-config>

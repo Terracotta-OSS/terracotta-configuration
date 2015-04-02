@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<tccon:tc-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:tccon="http://www.terracotta.org/config" xmlns:foo="http://www.example.com/foo">
+
+  <tccon:services>
+    <tccon:service>
+      <foo:foo/>
+    </tccon:service>
+  </tccon:services>
+</tccon:tc-config>
