@@ -40,7 +40,7 @@ public class TCConfigurationParser {
   private static final Map<URI, ServiceConfigParser<?>> serviceParsers = new HashMap<>();
 
   @SuppressWarnings("unchecked")
-  private static TcConfigDocument parseStream(InputStream in, ErrorHandler eh) throws IOException, SAXException {
+  private static TcConfiguration parseStream(InputStream in, ErrorHandler eh) throws IOException, SAXException {
     Collection<Source> schemaSources = new ArrayList<>();
 
     for (ServiceConfigParser<?> parser : loadConfigurationParserClasses()) {
@@ -86,13 +86,13 @@ public class TCConfigurationParser {
         }
       }
 
-      return new TcConfigDocument(tcConfig, serviceConfigurations);
+      return new TcConfiguration(tcConfig, serviceConfigurations);
     } catch (JAXBException e) {
       throw new TCConfigurationSetupException(e);
     }
   }
 
-  private static TcConfigDocument convert(InputStream in) throws IOException, SAXException {
+  private static TcConfiguration convert(InputStream in) throws IOException, SAXException {
     byte[] data = new byte[in.available()];
     in.read(data);
     in.close();
@@ -101,7 +101,7 @@ public class TCConfigurationParser {
     return parseStream(bais, RethrowErrorHandler.INSTANCE);
   }
 
-  public static TcConfigDocument parse(File file) throws IOException, SAXException {
+  public static TcConfiguration parse(File file) throws IOException, SAXException {
     FileInputStream in = null;
 
     try {
@@ -113,19 +113,19 @@ public class TCConfigurationParser {
     }
   }
 
-  public static TcConfigDocument parse(String xmlText) throws IOException, SAXException {
+  public static TcConfiguration parse(String xmlText) throws IOException, SAXException {
     return convert(new ByteArrayInputStream(xmlText.getBytes()));
   }
 
-  public static TcConfigDocument parse(InputStream stream) throws IOException, SAXException {
+  public static TcConfiguration parse(InputStream stream) throws IOException, SAXException {
     return convert(stream);
   }
 
-  public static TcConfigDocument parse(URL url) throws IOException, SAXException {
+  public static TcConfiguration parse(URL url) throws IOException, SAXException {
     return convert(url.openStream());
   }
 
-  public static TcConfigDocument parse(InputStream in, Collection<SAXParseException> errors) throws IOException, SAXException {
+  public static TcConfiguration parse(InputStream in, Collection<SAXParseException> errors) throws IOException, SAXException {
     return parseStream(in, new CollectingErrorHandler(errors));
   }
 

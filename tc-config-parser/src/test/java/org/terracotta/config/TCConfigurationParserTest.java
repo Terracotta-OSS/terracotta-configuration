@@ -16,7 +16,7 @@ public class TCConfigurationParserTest {
   public void testSimpleTCParser() throws Exception {
 
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-1.xml");
-    TcConfigDocument conf = TCConfigurationParser.parse(resource);
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
     TcConfig tcConfig = conf.getTcConfig();
 
     assertThat("servers should not be secured", tcConfig.getServers().isSecure(), is(false));
@@ -54,7 +54,7 @@ public class TCConfigurationParserTest {
   @Test
   public void testServiceParser() throws Exception {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service.xml");
-    TcConfigDocument conf = TCConfigurationParser.parse(resource);
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
 
     List<?> serviceConfigurations = conf.getServiceConfigurations();
     assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
