@@ -4,12 +4,12 @@ import javax.xml.bind.JAXB;
 import java.io.StringWriter;
 import java.util.List;
 
-public class TcConfigDocument {
+public class TcConfiguration {
   private final TcConfig config;
 
   private final List<?> serviceConfigurations;
 
-  public TcConfigDocument(TcConfig config, List<?> serviceConfigurations) {
+  public TcConfiguration(TcConfig config, List<?> serviceConfigurations) {
     this.config = config;
     this.serviceConfigurations = serviceConfigurations;
   }
