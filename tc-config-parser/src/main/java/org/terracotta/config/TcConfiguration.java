@@ -5,17 +5,17 @@ import java.io.StringWriter;
 import java.util.List;
 
 public class TcConfiguration {
-  private final TcConfig config;
+  private final TcConfig platformConfiguration;
 
   private final List<?> serviceConfigurations;
 
-  public TcConfiguration(TcConfig config, List<?> serviceConfigurations) {
-    this.config = config;
+  public TcConfiguration(TcConfig platformConfiguration, List<?> serviceConfigurations) {
+    this.platformConfiguration = platformConfiguration;
     this.serviceConfigurations = serviceConfigurations;
   }
 
-  public TcConfig getTcConfig() {
-    return config;
+  public TcConfig getPlatformConfiguration() {
+    return platformConfiguration;
   }
 
 
@@ -26,7 +26,7 @@ public class TcConfiguration {
   @Override
   public String toString() {
     StringWriter sw = new StringWriter();
-    JAXB.marshal(config, sw);
+    JAXB.marshal(platformConfiguration, sw);
     return sw.toString();
   }
 
