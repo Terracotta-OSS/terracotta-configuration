@@ -17,7 +17,7 @@ public class TCConfigurationParserTest {
 
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-1.xml");
     TcConfiguration conf = TCConfigurationParser.parse(resource);
-    TcConfig tcConfig = conf.getTcConfig();
+    TcConfig tcConfig = conf.getPlatformConfiguration();
 
     assertThat("servers should not be secured", tcConfig.getServers().isSecure(), is(false));
     assertThat("servers client reconnect window should be 200", tcConfig.getServers().getClientReconnectWindow(), is(200));
