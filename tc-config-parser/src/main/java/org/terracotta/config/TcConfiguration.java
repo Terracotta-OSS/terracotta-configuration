@@ -19,6 +19,20 @@ public class TcConfiguration {
   }
 
 
+  public Object getServiceConfiguration(Class<?> serviceType) {
+    for (Object o : serviceConfigurations) {
+      if(o.getClass().equals(serviceType)) {
+        return o;
+      }
+    }
+    try {
+      return serviceType.newInstance();
+    } catch (Exception e) {
+      throw new TCConfigurationSetupException(e);
+    }
+  }
+
+
   public List<?> getServiceConfigurations() {
     return this.serviceConfigurations;
   }
