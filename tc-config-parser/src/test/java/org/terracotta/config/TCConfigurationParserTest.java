@@ -2,6 +2,7 @@ package org.terracotta.config;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class TCConfigurationParserTest {
     assertThat("Server bind port should be 0.0.0.0", s.getBind(), is("0.0.0.0"));
     assertThat("Server name should be hostname1", s.getName(), is("hostname1"));
 
-    assertThat("Server log location should be mylog", s.getLogs(), is("mylog"));
+    assertThat("Server log location should be mylog", s.getLogs(), is(new File(resource.getPath()+ File.separator+"mylog").getAbsolutePath()));
 
     assertThat("Server tsa-port port should be 200", s.getTsaPort().getValue(), is(200));
     assertThat("Server tsa-port bind should be 0.0.0.0", s.getTsaPort().getBind(), is("0.0.0.0"));
