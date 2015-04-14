@@ -210,6 +210,7 @@
     <xs:sequence maxOccurs="1" minOccurs="0">
       <xs:element name="server" type="tc:server" maxOccurs="unbounded" minOccurs="0" />
       <xs:element name="client-reconnect-window" type="tc:non-negative-int" minOccurs="0" maxOccurs="1" default="120" />
+      <xs:element name="update-check" type="tc:update-check" maxOccurs="1" minOccurs="0" />
     </xs:sequence>
     <xs:attribute name="secure" type="xs:boolean" use="optional" default="false" />
   </xs:complexType>
@@ -324,5 +325,12 @@
           value="[A-Za-z_][A-Za-z_0-9$]*(\.[A-Za-z_][A-Za-z_0-9$]*)*" />
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:complexType name="update-check">
+    <xs:all>
+      <xs:element name="enabled" type="xs:boolean" minOccurs="0" default="true"/>
+      <xs:element name="period-days" type="tc:positive-int" minOccurs="0" default="7"/>
+    </xs:all>
+  </xs:complexType>
 
 </xs:schema>
