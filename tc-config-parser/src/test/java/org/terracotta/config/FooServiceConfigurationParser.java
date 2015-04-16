@@ -25,7 +25,7 @@ public class FooServiceConfigurationParser implements ServiceConfigParser<Object
   }
 
   @Override
-  public Object parse(Element fragment) {
+  public Object parse(Element fragment, String source) {
     return parsedObject;
   }
 }
