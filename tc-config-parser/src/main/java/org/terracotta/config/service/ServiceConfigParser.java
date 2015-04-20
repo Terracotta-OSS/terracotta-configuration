@@ -32,5 +32,5 @@ public interface ServiceConfigParser<T> {
    * @param fragment element to be parsed
    * @return service configuration
    */
-   T parse(Element fragment);
+   T parse(Element fragment, String source);
 }

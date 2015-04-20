@@ -97,7 +97,7 @@ public class TCConfigurationParser {
           if (parser == null) {
             throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
           }
-          serviceConfigurations.add(parser.parse(element));
+          serviceConfigurations.add(parser.parse(element, source));
         }
       }
 
