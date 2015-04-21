@@ -211,7 +211,7 @@ public class TCConfigurationParser {
 
     try {
       in = new FileInputStream(file);
-      return convert(in, file.getAbsolutePath());
+      return convert(in, file.getParent());
     } finally {
 
       IOUtils.closeQuietly(in);
