@@ -108,12 +108,14 @@ public class TCConfigurationParser {
   }
 
   private static void applyPlatformDefaults(TcConfig tcConfig, String source) {
-    tcConfig.getServers().getServer().forEach(TCConfigurationParser::setDefaultBind);
-    tcConfig.getServers().getServer().forEach(TCConfigurationParser::initializeTsaPort);
-    tcConfig.getServers().getServer().forEach(TCConfigurationParser::initializeManagementPort);
-    tcConfig.getServers().getServer().forEach(TCConfigurationParser::initializeTsaGroupPort);
-    tcConfig.getServers().getServer().forEach(TCConfigurationParser::initializeNameAndHost);
-    tcConfig.getServers().getServer().forEach(s -> initializeLogsDirectory(s, source));
+    for(Server server : tcConfig.getServers().getServer()) {
+      TCConfigurationParser.setDefaultBind(server);
+      TCConfigurationParser.initializeTsaPort(server);
+      TCConfigurationParser.initializeManagementPort(server);
+      TCConfigurationParser.initializeTsaGroupPort(server);
+      TCConfigurationParser.initializeNameAndHost(server);
+      TCConfigurationParser.initializeLogsDirectory(server, source);
+    }
   }
 
   private static void initializeTsaPort(Server server) {
