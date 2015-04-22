@@ -2,6 +2,7 @@ package org.terracotta.config;
 
 import javax.xml.bind.JAXB;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 public class TcConfiguration {
@@ -9,7 +10,10 @@ public class TcConfiguration {
 
   private final List<?> serviceConfigurations;
 
-  public TcConfiguration(TcConfig platformConfiguration, List<?> serviceConfigurations) {
+  private final String source;
+
+  public TcConfiguration(TcConfig platformConfiguration, String source ,List<?> serviceConfigurations) {
+    this.source = source;
     this.platformConfiguration = platformConfiguration;
     this.serviceConfigurations = serviceConfigurations;
   }
@@ -26,7 +30,14 @@ public class TcConfiguration {
       }
     }
     try {
-      return serviceType.newInstance();
+      Constructor cons;
+      try {
+        cons = serviceType.getConstructor(String.class);
+        return cons.newInstance(source);
+      } catch (NoSuchMethodException ex) {
+        cons = serviceType.getConstructor();
+        return cons.newInstance();
+      }
     } catch (Exception e) {
       throw new TCConfigurationSetupException(e);
     }
