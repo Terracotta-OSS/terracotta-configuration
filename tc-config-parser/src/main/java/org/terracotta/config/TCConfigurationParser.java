@@ -81,6 +81,9 @@ public class TCConfigurationParser {
         Servers servers = new Servers();
         tcConfig.setServers(servers);
       }
+      if(tcConfig.getServers().getUpdateCheck() == null) {
+        tcConfig.getServers().setUpdateCheck(new UpdateCheck());
+      }
       if(tcConfig.getServers().getServer().isEmpty()) {
         tcConfig.getServers().getServer().add(new Server());
       }
@@ -213,7 +216,7 @@ public class TCConfigurationParser {
 
     try {
       in = new FileInputStream(file);
-      return convert(in, file.getAbsolutePath());
+      return convert(in, file.getParent());
     } finally {
 
       IOUtils.closeQuietly(in);
