@@ -104,7 +104,7 @@ public class TCConfigurationParser {
         }
       }
 
-      return new TcConfiguration(tcConfig, serviceConfigurations);
+      return new TcConfiguration(tcConfig, source, serviceConfigurations);
     } catch (JAXBException e) {
       throw new TCConfigurationSetupException(e);
     }
