@@ -34,7 +34,7 @@ public class DefaultSubstitutor {
     Class<?> clazz = root.getClass();
     //don't process the internal types, these will be mostly service configuration which will be processed by specific
     //service.
-    if(clazz.getName().startsWith("com.sun")) {
+    if(clazz.getName().endsWith("ElementNSImpl")) {
       return;
     }
     for (Method method : clazz.getDeclaredMethods()) {
