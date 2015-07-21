@@ -80,9 +80,7 @@ public class TCConfigurationParser {
         Servers servers = new Servers();
         tcConfig.setServers(servers);
       }
-      if(tcConfig.getServers().getUpdateCheck() == null) {
-        tcConfig.getServers().setUpdateCheck(new UpdateCheck());
-      }
+
       if(tcConfig.getServers().getServer().isEmpty()) {
         tcConfig.getServers().getServer().add(new Server());
       }
