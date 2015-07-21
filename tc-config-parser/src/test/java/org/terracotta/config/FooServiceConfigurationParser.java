@@ -8,12 +8,22 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import org.terracotta.entity.ServiceProvider;
+import org.terracotta.entity.ServiceProviderConfiguration;
 
-public class FooServiceConfigurationParser implements ServiceConfigParser<Object> {
+public class FooServiceConfigurationParser implements ServiceConfigParser {
   private static final URI NAMESPACE = URI.create("http://www.example.com/foo");
   private static final URL XML_SCHEMA = FooServiceConfigurationParser.class.getResource("/foo.xsd");
 
-  static final Object parsedObject = new Object();
+  static final ServiceProviderConfiguration parsedObject = new ServiceProviderConfiguration() {
+
+    @Override
+    public Class<? extends ServiceProvider> getServiceProviderType() {
+      return ServiceProvider.class;
+    }
+
+    
+  };
   @Override
   public Source getXmlSchema() throws IOException {
     return new StreamSource(XML_SCHEMA.openStream());
@@ -25,7 +35,7 @@ public class FooServiceConfigurationParser implements ServiceConfigParser<Object
   }
 
   @Override
-  public Object parse(Element fragment, String source) {
+  public ServiceProviderConfiguration parse(Element fragment, String source) {
     return parsedObject;
   }
 }
