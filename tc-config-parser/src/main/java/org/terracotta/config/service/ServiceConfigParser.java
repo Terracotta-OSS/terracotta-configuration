@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import javax.xml.transform.Source;
 import java.io.IOException;
 import java.net.URI;
+import org.terracotta.entity.ServiceProviderConfiguration;
 
 /**
  * Interface which defines which a service configuration should be parsed. Each of the service configuration parser
@@ -12,7 +13,7 @@ import java.net.URI;
  *
  * @author vmad
  */
-public interface ServiceConfigParser<T> {
+public interface ServiceConfigParser {
 
   /**
    * Get the XML schema which will be handled by the service configuration parser.
@@ -32,5 +33,5 @@ public interface ServiceConfigParser<T> {
    * @param fragment element to be parsed
    * @return service configuration
    */
-   T parse(Element fragment, String source);
+   ServiceProviderConfiguration parse(Element fragment, String source);
 }

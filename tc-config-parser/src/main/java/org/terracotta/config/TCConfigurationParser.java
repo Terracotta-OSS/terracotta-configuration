@@ -30,7 +30,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
@@ -45,13 +44,13 @@ public class TCConfigurationParser {
   public static final int MAX_PORTNUMBER = 0xFFFF;
   public static final String DEFAULT_LOGS = "logs";
 
-  private static final Map<URI, ServiceConfigParser<?>> serviceParsers = new HashMap<>();
+  private static final Map<URI, ServiceConfigParser> serviceParsers = new HashMap<>();
 
   @SuppressWarnings("unchecked")
   private static TcConfiguration parseStream(InputStream in, ErrorHandler eh, String source) throws IOException, SAXException {
     Collection<Source> schemaSources = new ArrayList<>();
 
-    for (ServiceConfigParser<?> parser : loadConfigurationParserClasses()) {
+    for (ServiceConfigParser parser : loadConfigurationParserClasses()) {
       schemaSources.add(parser.getXmlSchema());
       serviceParsers.put(parser.getNamespace(), parser);
     }
@@ -81,9 +80,7 @@ public class TCConfigurationParser {
         Servers servers = new Servers();
         tcConfig.setServers(servers);
       }
-      if(tcConfig.getServers().getUpdateCheck() == null) {
-        tcConfig.getServers().setUpdateCheck(new UpdateCheck());
-      }
+
       if(tcConfig.getServers().getServer().isEmpty()) {
         tcConfig.getServers().getServer().add(new Server());
       }
@@ -96,7 +93,7 @@ public class TCConfigurationParser {
         for (Service service : tcConfig.getServices().getService()) {
           Element element = service.getAny();
           URI namespace = URI.create(element.getNamespaceURI());
-          ServiceConfigParser<?> parser = serviceParsers.get(namespace);
+          ServiceConfigParser parser = serviceParsers.get(namespace);
           if (parser == null) {
             throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
           }
