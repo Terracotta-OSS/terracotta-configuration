@@ -92,6 +92,7 @@ public class TCConfigurationParser {
         //now parse the service configuration.
         for (Service service : tcConfig.getServices().getService()) {
           Element element = service.getAny();
+          if (element == null) continue;
           URI namespace = URI.create(element.getNamespaceURI());
           ServiceConfigParser parser = serviceParsers.get(namespace);
           if (parser == null) {
