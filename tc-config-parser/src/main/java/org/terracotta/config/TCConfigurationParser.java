@@ -92,13 +92,14 @@ public class TCConfigurationParser {
         //now parse the service configuration.
         for (Service service : tcConfig.getServices().getService()) {
           Element element = service.getAny();
-          if (element == null) continue;
-          URI namespace = URI.create(element.getNamespaceURI());
-          ServiceConfigParser parser = serviceParsers.get(namespace);
-          if (parser == null) {
-            throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
+          if (element != null) {
+            URI namespace = URI.create(element.getNamespaceURI());
+            ServiceConfigParser parser = serviceParsers.get(namespace);
+            if (parser == null) {
+              throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
+            }
+            serviceConfigurations.add(parser.parse(element, source));
           }
-          serviceConfigurations.add(parser.parse(element, source));
         }
       }
 
