@@ -61,4 +61,14 @@ public class TCConfigurationParserTest {
     assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
     assertThat(serviceConfigurations.get(0), is(FooServiceConfigurationParser.parsedObject));
   }
+
+  @Test
+  public void testEmptyService() throws Exception {
+
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-empty-service.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+
+    assertThat("there should be no services", conf.getServiceConfigurations().size(), is(0));
+
+  }
 }
