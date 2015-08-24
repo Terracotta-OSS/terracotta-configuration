@@ -4,7 +4,7 @@
                  xmlns:tccon="http://www.terracotta.org/config">
 
   <tccon:services>
-    <tccon:service>
+    <tccon:service id="empty">
     </tccon:service>
   </tccon:services>
 </tccon:tc-config>
