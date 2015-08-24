@@ -5,6 +5,7 @@ import org.terracotta.config.service.ServiceConfigParser;
 import org.terracotta.config.util.DefaultSubstitutor;
 import org.apache.commons.io.IOUtils;
 import org.terracotta.config.util.ParameterSubstitutor;
+import org.terracotta.entity.ServiceProviderConfiguration;
 import org.w3c.dom.Element;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -32,6 +33,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.List;
 
 public class TCConfigurationParser {
 
@@ -87,7 +89,20 @@ public class TCConfigurationParser {
       DefaultSubstitutor.applyDefaults(tcConfig);
       applyPlatformDefaults(tcConfig, source);
 
-      ArrayList serviceConfigurations = new ArrayList();
+      Map<String, Map<String, ServiceOverride>> serviceOverrides = new HashMap<>();
+      for(Server server : tcConfig.getServers().getServer()) {
+        if(server.getServiceOverrides() != null && server.getServiceOverrides().getServiceOverride() != null) {
+          for(ServiceOverride serviceOverride : server.getServiceOverrides().getServiceOverride()) {
+            String id = ((Service)serviceOverride.getOverrides()).getId();
+            if(serviceOverrides.get(id) == null) {
+              serviceOverrides.put(id, new HashMap<>());
+            }
+            serviceOverrides.get(id).put(server.getName(), serviceOverride);
+          }
+        }
+      }
+
+      Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = new HashMap<>();
       if (tcConfig.getServices() != null && tcConfig.getServices().getService() != null) {
         //now parse the service configuration.
         for (Service service : tcConfig.getServices().getService()) {
@@ -97,7 +112,18 @@ public class TCConfigurationParser {
           if (parser == null) {
             throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
           }
-          serviceConfigurations.add(parser.parse(element, source));
+          ServiceProviderConfiguration serviceProviderConfiguration = parser.parse(element, source);
+          for(Server server : tcConfig.getServers().getServer()) {
+            if(serviceConfigurations.get(server.getName()) == null) {
+              serviceConfigurations.put(server.getName(), new ArrayList<>());
+            }
+            if(serviceOverrides.get(service.getId()) != null && serviceOverrides.get(service.getId()).containsKey(server.getName())) {
+              Element overrideElement = serviceOverrides.get(service.getId()).get(server.getName()).getAny();
+              serviceConfigurations.get(server.getName()).add(parser.parse(overrideElement, source));
+            } else {
+              serviceConfigurations.get(server.getName()).add(serviceProviderConfiguration);
+            }
+          }
         }
       }
 
