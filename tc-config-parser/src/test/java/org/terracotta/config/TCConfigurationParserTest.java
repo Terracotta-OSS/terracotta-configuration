@@ -1,14 +1,20 @@
 package org.terracotta.config;
 
+import junit.framework.Assert;
 import org.junit.Test;
+import org.terracotta.config.FooServiceConfigurationParser.FooServiceProviderConfiguration;
+import org.terracotta.entity.ServiceProviderConfiguration;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class TCConfigurationParserTest {
 
@@ -57,9 +63,25 @@ public class TCConfigurationParserTest {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service.xml");
     TcConfiguration conf = TCConfigurationParser.parse(resource);
 
-    List<?> serviceConfigurations = conf.getServiceConfigurations();
+    Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = conf.getServiceConfigurations();
+
     assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
-    assertThat(serviceConfigurations.get(0), is(FooServiceConfigurationParser.parsedObject));
+    assertThat(serviceConfigurations.values().iterator().next().get(0), instanceOf(FooServiceProviderConfiguration.class));
+    FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.values().iterator().next().get(0);
+    assertEquals("foo", serviceProviderConfiguration.getFoo().getName());
+  }
+
+  @Test
+  public void testServiceOverrides() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service-override.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+
+    Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = conf.getServiceConfigurations();
+
+    assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
+    assertThat(serviceConfigurations.values().iterator().next().get(0), instanceOf(FooServiceProviderConfiguration.class));
+    FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.values().iterator().next().get(0);
+    assertEquals("bar", serviceProviderConfiguration.getFoo().getName());
   }
 
   @Test

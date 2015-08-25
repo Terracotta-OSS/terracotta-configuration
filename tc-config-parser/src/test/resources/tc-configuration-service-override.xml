@@ -10,6 +10,11 @@
   </tccon:services>
   <tccon:servers>
     <tccon:server>
+      <tccon:service-overrides>
+        <tccon:service-override overrides="foo">
+          <foo:foo name="bar"/>
+        </tccon:service-override>
+      </tccon:service-overrides>
     </tccon:server>
   </tccon:servers>
 </tccon:tc-config>
