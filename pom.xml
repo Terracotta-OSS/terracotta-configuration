@@ -107,22 +107,21 @@
 
   <distributionManagement>
     <repository>
-      <id>terracotta-releases</id>
-      <name>Terracotta Releases Repository</name>
-      <url>${terracotta-releases-url}</url>
+      <id>terracotta-os-releases</id>
+      <name>Terracotta OS Releases Repository</name>
+      <url>${terracotta-os-releases-url}</url>
     </repository>
     <snapshotRepository>
-      <id>terracotta-snapshots</id>
+      <id>terracotta-os-snapshots</id>
       <uniqueVersion>false</uniqueVersion>
-      <name>Terracotta Snapshots Repository</name>
-      <url>${terracotta-snapshots-url}</url>
+      <name>Terracotta OS Snapshots Repository</name>
+      <url>${terracotta-os-snapshots-url}</url>
     </snapshotRepository>
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.terracotta.org/svn/forge/projects/tc-config-schema/trunk</connection>
-    <developerConnection>scm:svn:https://svn.terracotta.org/repo/forge/projects/tc-config-schema/trunk
-    </developerConnection>
+    <connection>ssh://git@irepo.eur.ad.sag:7999/tab/tc-config.git</connection>
+    <developerConnection>ssh://git@irepo.eur.ad.sag:7999/tab/tc-config.git</developerConnection>
   </scm>
 
 </project>
