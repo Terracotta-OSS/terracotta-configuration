@@ -1,171 +1,176 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-<modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-<parent>
-  <groupId>org.terracotta.internal</groupId>
-  <artifactId>tc-config-parent</artifactId>
-  <version>10.0-SNAPSHOT</version>
-  <relativePath>..</relativePath>
-</parent>
+  <parent>
+    <groupId>org.terracotta.internal</groupId>
+    <artifactId>tc-config-parent</artifactId>
+    <version>10.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
 
-<groupId>org.terracotta</groupId>
-<artifactId>tcconfig-schema</artifactId>
-<packaging>jar</packaging>
-<name>tcconfig-schema</name>
+  <groupId>org.terracotta</groupId>
+  <artifactId>tcconfig-schema</artifactId>
+  <packaging>jar</packaging>
+  <name>tcconfig-schema</name>
 
-<properties>
-  <skip.schema>true</skip.schema>
-</properties>
+  <properties>
+    <skip.schema>true</skip.schema>
+  </properties>
 
-<build>
-  <resources>
-    <resource>
-      <directory>src/main/resources</directory>
-      <filtering>true</filtering>
-    </resource>
-  </resources>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
 
-  <plugins>
-    <plugin>
-      <artifactId>maven-antrun-plugin</artifactId>
-      <version>1.7</version>
-      <executions>
-        <execution>
-          <id>copy-resources-all-nodes</id>
-          <phase>compile</phase>
-          <configuration>
-            <tasks>
-              <copy file="target/classes/terracotta.xsd" toFile="target/terracotta-${project.version}.xsd"/>
-            </tasks>
-          </configuration>
-          <goals>
-            <goal>run</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-    <!-- generate schema -->
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>exec-maven-plugin</artifactId>
-      <version>1.2</version>
-      <executions>
-        <execution>
-          <id>generate-docflex</id>
-          <phase>prepare-package</phase>
-          <goals>
-            <goal>exec</goal>
-          </goals>
-          <configuration>
-            <skip>${skip.schema}</skip>
-            <executable>${java.home}/bin/java</executable>
-            <arguments>
-              <argument>-Xmx512m</argument>
-              <argument>-cp</argument>
-              <argument>${env.DOCFLEX_HOME}/lib/docflex-xml.jar${path.separator}${env.DOCFLEX_HOME}/lib/resolver.jar${path.separator}${env.DOCFLEX_HOME}/lib/xercesImpl.jar${path.separator}${env.DOCFLEX_HOME}/lib/xml-apis.jar</argument>
-              <argument>com.docflex.xml.Generator</argument>
-              <argument>-template</argument>
-              <argument>${env.DOCFLEX_HOME}/templates/XSDDoc/FramedDoc.tpl</argument>
-              <argument>-format</argument>
-              <argument>HTML</argument>
-              <argument>-p:docTitle=Terracotta Configuration Schema Version ${project.version}</argument>
-              <argument>-d</argument>
-              <argument>${project.build.directory}/docflex</argument>
-              <argument>-f</argument>
-              <argument>index.html</argument>
-              <argument>-nodialog=true</argument>
-              <argument>-quiet=true</argument>
-              <argument>-launchviewer=false</argument>
-              <argument>target/terracotta-${project.version}.xsd</argument>
-            </arguments>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-assembly-plugin</artifactId>
-      <version>2.2.2</version><!--$NO-MVN-MAN-VER$-->
-      <executions>
-        <execution>
-          <id>assemble-docflex</id>
-          <phase>prepare-package</phase>
-          <goals>
-            <goal>single</goal>
-          </goals>
-          <configuration>
-            <descriptors>
-              <descriptor>${basedir}/src/assemble/docflex.xml</descriptor>
-            </descriptors>
-            <appendAssemblyId>true</appendAssemblyId>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-  </plugins>
-  <pluginManagement>
     <plugins>
-      <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
       <plugin>
-    	<groupId>org.eclipse.m2e</groupId>
-    	<artifactId>lifecycle-mapping</artifactId>
-    	<version>1.0.0</version>
-    	<configuration>
-    	  <lifecycleMappingMetadata>
-    	    <pluginExecutions>
-    	      <pluginExecution>
-    		<pluginExecutionFilter>
-    		  <groupId>
-    		    org.apache.maven.plugins
-    		  </groupId>
-    		  <artifactId>
-    		    maven-jar-plugin
-    		  </artifactId>
-    		  <versionRange>
-    		    [2.3.1,)
-    		  </versionRange>
-    		  <goals>
-    		    <goal>jar</goal>
-    		  </goals>
-    		</pluginExecutionFilter>
-    		<action>
-    		  <ignore/>
-    		</action>
-    	      </pluginExecution>
-    	      <pluginExecution>
-    	      	<pluginExecutionFilter>
-    	      		<groupId>org.apache.maven.plugins</groupId>
-    	      		<artifactId>maven-antrun-plugin</artifactId>
-    	      		<versionRange>[1.7,)</versionRange>
-    	      		<goals>
-    	      			<goal>run</goal>
-    	      		</goals>
-    	      	</pluginExecutionFilter>
-    	      	<action>
-    	      		<ignore></ignore>
-    	      	</action>
-    	      </pluginExecution>
-    	    </pluginExecutions>
-    	  </lifecycleMappingMetadata>
-    	</configuration>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>copy-resources-all-nodes</id>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <copy file="target/classes/terracotta.xsd" toFile="target/terracotta-${project.version}.xsd"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- generate schema -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <id>generate-docflex</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.schema}</skip>
+              <executable>${java.home}/bin/java</executable>
+              <arguments>
+                <argument>-Xmx512m</argument>
+                <argument>-cp</argument>
+                <argument>
+                  ${env.DOCFLEX_HOME}/lib/docflex-xml.jar${path.separator}${env.DOCFLEX_HOME}/lib/resolver.jar${path.separator}${env.DOCFLEX_HOME}/lib/xercesImpl.jar${path.separator}${env.DOCFLEX_HOME}/lib/xml-apis.jar
+                </argument>
+                <argument>com.docflex.xml.Generator</argument>
+                <argument>-template</argument>
+                <argument>${env.DOCFLEX_HOME}/templates/XSDDoc/FramedDoc.tpl</argument>
+                <argument>-format</argument>
+                <argument>HTML</argument>
+                <argument>-p:docTitle=Terracotta Configuration Schema Version ${project.version}</argument>
+                <argument>-d</argument>
+                <argument>${project.build.directory}/docflex</argument>
+                <argument>-f</argument>
+                <argument>index.html</argument>
+                <argument>-nodialog=true</argument>
+                <argument>-quiet=true</argument>
+                <argument>-launchviewer=false</argument>
+                <argument>target/terracotta-${project.version}.xsd</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.2</version>
+        <!--$NO-MVN-MAN-VER$-->
+        <executions>
+          <execution>
+            <id>assemble-docflex</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/assemble/docflex.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>true</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
-  </pluginManagement>
-</build>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.apache.maven.plugins
+                    </groupId>
+                    <artifactId>
+                      maven-jar-plugin
+                    </artifactId>
+                    <versionRange>
+                      [2.3.1,)
+                    </versionRange>
+                    <goals>
+                      <goal>jar</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <versionRange>[1.7,)</versionRange>
+                    <goals>
+                      <goal>run</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
-<profiles>
-  <profile>
-    <id>docflex</id>
-    <activation>
-      <file>
-        <exists>${env.DOCFLEX_HOME}</exists>
-      </file>
-    </activation>
-    <properties>
-      <skip.schema>false</skip.schema>
-    </properties>
-  </profile>
-</profiles>
+  <profiles>
+    <profile>
+      <id>docflex</id>
+      <activation>
+        <file>
+          <exists>${env.DOCFLEX_HOME}</exists>
+        </file>
+      </activation>
+      <properties>
+        <skip.schema>false</skip.schema>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
