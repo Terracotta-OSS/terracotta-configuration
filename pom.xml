@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.terracotta</groupId>
     <artifactId>terracotta-parent</artifactId>
-    <version>5.0.0.alpha1</version>
+    <version>5.0.0.alpha2</version>
   </parent>
 
   <groupId>org.terracotta.internal</groupId>
@@ -148,8 +148,8 @@
   </repositories>
 
   <scm>
-    <connection>scm:git:ssh://git@irepo.eur.ad.sag:7999/tab/tc-config.git</connection>
-    <developerConnection>scm:git:ssh://git@irepo.eur.ad.sag:7999/tab/tc-config.git</developerConnection>
+    <connection>scm:git:https://github.com/Terracotta-OSS/terracotta-configuration.git</connection>
+    <developerConnection>scm:git:https://github.com/Terracotta-OSS/terracotta-configuration.git</developerConnection>
   </scm>
 
 </project>
