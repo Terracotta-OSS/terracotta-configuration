@@ -41,7 +41,7 @@ public class TCConfigurationParserTest {
   public void testSimpleTCParser() throws Exception {
 
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-1.xml");
-    TcConfiguration conf = TCConfigurationParser.parse(resource, getClass().getClassLoader());
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
     TcConfig tcConfig = conf.getPlatformConfiguration();
 
     assertThat("servers should not be secured", tcConfig.getServers().isSecure(), is(false));
@@ -79,7 +79,7 @@ public class TCConfigurationParserTest {
   @Test
   public void testServiceParser() throws Exception {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service.xml");
-    TcConfiguration conf = TCConfigurationParser.parse(resource, getClass().getClassLoader());
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
 
     Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = conf.getServiceConfigurations();
 
@@ -92,7 +92,7 @@ public class TCConfigurationParserTest {
   @Test
   public void testServiceOverrides() throws Exception {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service-override.xml");
-    TcConfiguration conf = TCConfigurationParser.parse(resource, getClass().getClassLoader());
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
 
     Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = conf.getServiceConfigurations();
 
@@ -106,7 +106,7 @@ public class TCConfigurationParserTest {
   public void testEmptyService() throws Exception {
 
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-empty-service.xml");
-    TcConfiguration conf = TCConfigurationParser.parse(resource, getClass().getClassLoader());
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
 
     assertThat("there should be no services", conf.getServiceConfigurations().size(), is(0));
 

@@ -255,6 +255,10 @@ public class TCConfigurationParser {
 
     return parseStream(bais, RethrowErrorHandler.INSTANCE, path, loader);
   }
+  
+  public static TcConfiguration parse(File f)  throws IOException, SAXException {
+    return parse(f, Thread.currentThread().getContextClassLoader());
+  }
 
   public static TcConfiguration parse(File file, ClassLoader loader) throws IOException, SAXException {
     FileInputStream in = null;
@@ -267,19 +271,35 @@ public class TCConfigurationParser {
       IOUtils.closeQuietly(in);
     }
   }
+  
+  public static TcConfiguration parse(String xmlText) throws IOException, SAXException {
+    return parse(xmlText, Thread.currentThread().getContextClassLoader());
+  }
 
   public static TcConfiguration parse(String xmlText, ClassLoader loader) throws IOException, SAXException {
     return convert(new ByteArrayInputStream(xmlText.getBytes()), null, loader);
   }
-
+  
+  public static TcConfiguration parse(InputStream stream) throws IOException, SAXException {
+    return parse(stream, Thread.currentThread().getContextClassLoader());
+  }
+  
   public static TcConfiguration parse(InputStream stream, ClassLoader loader) throws IOException, SAXException {
     return convert(stream, null, loader);
   }
-
+  
+  public static TcConfiguration parse(URL stream) throws IOException, SAXException {
+    return parse(stream, Thread.currentThread().getContextClassLoader());
+  }
+  
   public static TcConfiguration parse(URL url, ClassLoader loader) throws IOException, SAXException {
     return convert(url.openStream(), url.getPath(), loader);
   }
-
+  
+  public static TcConfiguration parse(InputStream in, Collection<SAXParseException> errors, String source) throws IOException, SAXException {
+    return parse(in, errors, source, Thread.currentThread().getContextClassLoader());
+  }
+  
   public static TcConfiguration parse(InputStream in, Collection<SAXParseException> errors, String source, ClassLoader loader) throws IOException, SAXException {
     return parseStream(in, new CollectingErrorHandler(errors), source, loader);
   }
