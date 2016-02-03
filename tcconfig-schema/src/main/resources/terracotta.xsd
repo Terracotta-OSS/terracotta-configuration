@@ -203,7 +203,7 @@
         </xs:annotation>
       </xs:element>
       
-      <xs:element name="data-backup" type="tc:path" minOccurs="0" default="data-backup">
+      <xs:element name="data-backup" type="tc:path" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             Where the data should be stored in case a backup call is initiated.
