@@ -63,6 +63,8 @@ public class TCConfigurationParser {
   public static final int MIN_PORTNUMBER = 0x0FFF;
   public static final int MAX_PORTNUMBER = 0xFFFF;
   public static final String DEFAULT_LOGS = "logs";
+  public static final String DEFAULT_DATA = "data";
+  public static final String DEFAULT_DATA_BACKUP = "data-backup";
 
   private static final Map<URI, ServiceConfigParser> serviceParsers = new HashMap<>();
 
@@ -162,6 +164,8 @@ public class TCConfigurationParser {
       TCConfigurationParser.initializeManagementPort(server);
       TCConfigurationParser.initializeTsaGroupPort(server);
       TCConfigurationParser.initializeNameAndHost(server);
+      TCConfigurationParser.initializeDataDirectory(server, source);
+      TCConfigurationParser.initializeDataBackupDirectory(server, source);
       TCConfigurationParser.initializeLogsDirectory(server, source);
     }
   }
@@ -174,6 +178,21 @@ public class TCConfigurationParser {
       server.getTsaPort().setBind(server.getBind());
     }
   }
+  
+  private static void initializeDataBackupDirectory(Server server, String source) {
+    if(server.getDataBackup() == null) {
+      return;
+    }
+    server.setDataBackup(getAbsolutePath(ParameterSubstitutor.substitute(server.getDataBackup()), new File(source!= null ? source: ".")));
+  }  
+  
+  private static void initializeDataDirectory(Server server, String source) {
+    if(server.getData() == null) {
+      server.setData(DEFAULT_DATA);
+    }
+    server.setData(getAbsolutePath(ParameterSubstitutor.substitute(server.getData()), new File(source!= null ? source: ".")));
+  }
+
   private static void initializeLogsDirectory(Server server, String source) {
     if(server.getLogs() == null) {
       server.setLogs(DEFAULT_LOGS);
