@@ -67,10 +67,10 @@ public class TCConfigurationParser {
   private static final Map<URI, ServiceConfigParser> serviceParsers = new HashMap<>();
 
   @SuppressWarnings("unchecked")
-  private static TcConfiguration parseStream(InputStream in, ErrorHandler eh, String source) throws IOException, SAXException {
+  private static TcConfiguration parseStream(InputStream in, ErrorHandler eh, String source, ClassLoader loader) throws IOException, SAXException {
     Collection<Source> schemaSources = new ArrayList<>();
 
-    for (ServiceConfigParser parser : loadConfigurationParserClasses()) {
+    for (ServiceConfigParser parser : loadConfigurationParserClasses(loader)) {
       schemaSources.add(parser.getXmlSchema());
       serviceParsers.put(parser.getNamespace(), parser);
     }
@@ -247,41 +247,61 @@ public class TCConfigurationParser {
     s.setBind(ParameterSubstitutor.substitute(s.getBind()));
   }
 
-  private static TcConfiguration convert(InputStream in, String path) throws IOException, SAXException {
+  private static TcConfiguration convert(InputStream in, String path, ClassLoader loader) throws IOException, SAXException {
     byte[] data = new byte[in.available()];
     in.read(data);
     in.close();
     ByteArrayInputStream bais = new ByteArrayInputStream(data);
 
-    return parseStream(bais, RethrowErrorHandler.INSTANCE, path);
+    return parseStream(bais, RethrowErrorHandler.INSTANCE, path, loader);
+  }
+  
+  public static TcConfiguration parse(File f)  throws IOException, SAXException {
+    return parse(f, Thread.currentThread().getContextClassLoader());
   }
 
-  public static TcConfiguration parse(File file) throws IOException, SAXException {
+  public static TcConfiguration parse(File file, ClassLoader loader) throws IOException, SAXException {
     FileInputStream in = null;
 
     try {
       in = new FileInputStream(file);
-      return convert(in, file.getParent());
+      return convert(in, file.getParent(), loader);
     } finally {
 
       IOUtils.closeQuietly(in);
     }
   }
-
+  
   public static TcConfiguration parse(String xmlText) throws IOException, SAXException {
-    return convert(new ByteArrayInputStream(xmlText.getBytes()), null);
+    return parse(xmlText, Thread.currentThread().getContextClassLoader());
   }
 
+  public static TcConfiguration parse(String xmlText, ClassLoader loader) throws IOException, SAXException {
+    return convert(new ByteArrayInputStream(xmlText.getBytes()), null, loader);
+  }
+  
   public static TcConfiguration parse(InputStream stream) throws IOException, SAXException {
-    return convert(stream, null);
+    return parse(stream, Thread.currentThread().getContextClassLoader());
   }
-
-  public static TcConfiguration parse(URL url) throws IOException, SAXException {
-    return convert(url.openStream(), url.getPath());
+  
+  public static TcConfiguration parse(InputStream stream, ClassLoader loader) throws IOException, SAXException {
+    return convert(stream, null, loader);
   }
-
+  
+  public static TcConfiguration parse(URL stream) throws IOException, SAXException {
+    return parse(stream, Thread.currentThread().getContextClassLoader());
+  }
+  
+  public static TcConfiguration parse(URL url, ClassLoader loader) throws IOException, SAXException {
+    return convert(url.openStream(), url.getPath(), loader);
+  }
+  
   public static TcConfiguration parse(InputStream in, Collection<SAXParseException> errors, String source) throws IOException, SAXException {
-    return parseStream(in, new CollectingErrorHandler(errors), source);
+    return parse(in, errors, source, Thread.currentThread().getContextClassLoader());
+  }
+  
+  public static TcConfiguration parse(InputStream in, Collection<SAXParseException> errors, String source, ClassLoader loader) throws IOException, SAXException {
+    return parseStream(in, new CollectingErrorHandler(errors), source, loader);
   }
 
   private static class CollectingErrorHandler implements ErrorHandler {
@@ -329,9 +349,9 @@ public class TCConfigurationParser {
     }
   }
 
-  private static ServiceLoader<ServiceConfigParser> loadConfigurationParserClasses() {
-    return ServiceLoader.load(ServiceConfigParser.class,
-        TCConfigurationParser.class.getClassLoader());
+  private static ServiceLoader<ServiceConfigParser> loadConfigurationParserClasses(ClassLoader loader) {
+    return ServiceLoader.load(ServiceConfigParser.class,loader);
   }
-
+  
+  
 }
