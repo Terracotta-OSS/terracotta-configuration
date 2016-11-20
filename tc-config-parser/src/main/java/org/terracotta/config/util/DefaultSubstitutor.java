@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 /**
@@ -52,7 +53,7 @@ public class DefaultSubstitutor {
     Class<?> clazz = root.getClass();
     //don't process the internal types, these will be mostly service configuration which will be processed by specific
     //service.
-    if(clazz.getName().endsWith("ElementNSImpl")) {
+    if (clazz.getAnnotation(XmlType.class) == null) {
       return;
     }
     for (Method method : clazz.getDeclaredMethods()) {
@@ -167,7 +168,7 @@ public class DefaultSubstitutor {
     try {
       return method.invoke(obj);
     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      throw new TCConfigurationSetupException(e);
+      throw new TCConfigurationSetupException(method.getDeclaringClass().getName() + ":" + method.getName(), e);
     }
   }
 

@@ -104,7 +104,10 @@
 
   <xs:complexType name="services">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="service" type="tc:service"/>
+      <xs:choice>
+        <xs:element name="config" type="tc:service"/>
+        <xs:element name="service" type="tc:service"/>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 
