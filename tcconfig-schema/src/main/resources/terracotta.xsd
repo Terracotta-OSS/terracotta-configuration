@@ -114,12 +114,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="service-overrides">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="service-override" type="tc:service-override"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="service">
     <xs:choice>
       <xs:any namespace="##other" minOccurs="0" maxOccurs="1" processContents="skip"/>
@@ -148,13 +142,6 @@
       </xs:element>
     </xs:sequence>
   </xs:complexType>
-  
-  <xs:complexType name="service-override">
-    <xs:choice>
-      <xs:any namespace="##other" minOccurs="0" maxOccurs="1" processContents="skip"/>
-    </xs:choice>
-    <xs:attribute name="overrides" type="xs:IDREF" use="required"/>
-  </xs:complexType>
 
   <xs:complexType name="tc-properties">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -176,8 +163,6 @@
     </xs:annotation>
 
     <xs:all>
-      <xs:element name="service-overrides" type="tc:service-overrides" minOccurs="0"/>
-
       <xs:element name="logs" type="tc:path" minOccurs="0"
                   default="logs">
         <xs:annotation>

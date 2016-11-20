@@ -28,9 +28,9 @@ import org.terracotta.entity.ServiceProviderConfiguration;
 public class TcConfiguration {
   private final TcConfig platformConfiguration;
 
-  private final Map<String, List<ServiceProviderConfiguration>> serviceConfigurations;
+  private final List<ServiceProviderConfiguration> serviceConfigurations;
 
-  public TcConfiguration(TcConfig platformConfiguration, String source , Map<String, List<ServiceProviderConfiguration>> serviceConfigurations) {
+  public TcConfiguration(TcConfig platformConfiguration, String source , List<ServiceProviderConfiguration> serviceConfigurations) {
     this.platformConfiguration = platformConfiguration;
     this.serviceConfigurations = serviceConfigurations;
   }
@@ -39,7 +39,7 @@ public class TcConfiguration {
     return platformConfiguration;
   }
 
-  public Map<String, List<ServiceProviderConfiguration>> getServiceConfigurations() {
+  public List<ServiceProviderConfiguration> getServiceConfigurations() {
     return this.serviceConfigurations;
   }
 

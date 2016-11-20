@@ -81,25 +81,12 @@ public class TCConfigurationParserTest {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service.xml");
     TcConfiguration conf = TCConfigurationParser.parse(resource);
 
-    Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = conf.getServiceConfigurations();
+    List<ServiceProviderConfiguration> serviceConfigurations = conf.getServiceConfigurations();
 
     assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
-    assertThat(serviceConfigurations.values().iterator().next().get(0), instanceOf(FooServiceProviderConfiguration.class));
-    FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.values().iterator().next().get(0);
+    assertThat(serviceConfigurations.get(0), instanceOf(FooServiceProviderConfiguration.class));
+    FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.get(0);
     assertEquals("foo", serviceProviderConfiguration.getFoo().getName());
-  }
-
-  @Test
-  public void testServiceOverrides() throws Exception {
-    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-service-override.xml");
-    TcConfiguration conf = TCConfigurationParser.parse(resource);
-
-    Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = conf.getServiceConfigurations();
-
-    assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
-    assertThat(serviceConfigurations.values().iterator().next().get(0), instanceOf(FooServiceProviderConfiguration.class));
-    FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.values().iterator().next().get(0);
-    assertEquals("bar", serviceProviderConfiguration.getFoo().getName());
   }
 
   @Test
