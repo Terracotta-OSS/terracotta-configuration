@@ -118,9 +118,9 @@ public class TCConfigurationParser {
 
       List<ServiceProviderConfiguration> serviceConfigurations = new ArrayList<>();
       List<Object> configObjects = new ArrayList<>();
-      if (tcConfig.getServices() != null && tcConfig.getServices().getConfigOrService()!= null) {
+      if (tcConfig.getPlugins()!= null && tcConfig.getPlugins().getConfigOrService()!= null) {
         //now parse the service configuration.
-        for (JAXBElement<Service> service : tcConfig.getServices().getConfigOrService()) {
+        for (JAXBElement<Service> service : tcConfig.getPlugins().getConfigOrService()) {
           Element element = service.getValue().getAny();
           if (element != null) {
             URI namespace = URI.create(element.getNamespaceURI());
