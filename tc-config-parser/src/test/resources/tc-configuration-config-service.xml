@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
 <!--
   ~ The contents of this file are subject to the Terracotta Public License Version
   ~ 2.0 (the "License"); You may not use this file except in compliance with the
@@ -16,19 +18,22 @@
   ~
   -->
 
-<assembly>
-  <id>sources</id>
-  <formats>
-    <format>jar</format>
-  </formats>
-  <includeBaseDirectory>false</includeBaseDirectory>
-  <fileSets>
-    <fileSet>
-      <outputDirectory>/</outputDirectory>
-      <directory>${project.build.directory}/generated-sources/jaxb</directory>
-      <excludes>
-        <exclude>.staleFlag</exclude>
-      </excludes>
-    </fileSet>
-  </fileSets>
-</assembly>
+<tccon:tc-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:tccon="http://www.terracotta.org/config" xmlns:foo="http://www.example.com/foo" xmlns:bar="http://www.example.com/bar">
+
+  <tccon:plugins>
+    <tccon:config>
+      <bar:bar name="bar"/>
+    </tccon:config>
+    <tccon:service>
+      <foo:foo name="foo"/>
+    </tccon:service>
+    <tccon:config>
+      <bar:bar name="baz"/>
+    </tccon:config>
+  </tccon:plugins>
+  <tccon:servers>
+    <tccon:server>
+    </tccon:server>
+  </tccon:servers>
+</tccon:tc-config>

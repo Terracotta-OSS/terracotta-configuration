@@ -18,7 +18,7 @@
 
 package org.terracotta.config;
 
-import junit.framework.Assert;
+import com.example.bar.Bar;
 import org.junit.Test;
 import org.terracotta.config.FooServiceConfigurationParser.FooServiceProviderConfiguration;
 import org.terracotta.entity.ServiceProviderConfiguration;
@@ -26,7 +26,6 @@ import org.terracotta.entity.ServiceProviderConfiguration;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -97,5 +96,24 @@ public class TCConfigurationParserTest {
 
     assertThat("there should be no services", conf.getServiceConfigurations().size(), is(0));
 
+  }
+  
+  
+  @Test
+  public void testConfigAndService() throws Exception {
+
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-config-service.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+    List<String> configs = conf.getExtendedConfiguration(String.class);
+    assertEquals(2, configs.size());
+    assertEquals("bar", configs.get(0));
+    assertEquals("baz", configs.get(1));
+
+    List<ServiceProviderConfiguration> serviceConfigurations = conf.getServiceConfigurations();
+
+    assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
+    assertThat(serviceConfigurations.get(0), instanceOf(FooServiceProviderConfiguration.class));
+    FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.get(0);
+    assertEquals("foo", serviceProviderConfiguration.getFoo().getName());  
   }
 }
