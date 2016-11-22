@@ -41,12 +41,26 @@
   <build>
     <resources>
       <resource>
-        <directory>src/main/resources</directory>
+        <directory>src/main/xsd/</directory>
         <filtering>true</filtering>
       </resource>
     </resources>
 
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+            <execution>
+                <id>xjc</id>
+                <goals>
+                    <goal>xjc</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.7</version>
@@ -128,7 +142,8 @@
       </plugin>
     </plugins>
     <pluginManagement>
-      <plugins>
+      <plugins>       
+
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>

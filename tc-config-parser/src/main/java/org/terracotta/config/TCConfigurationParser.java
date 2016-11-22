@@ -19,7 +19,6 @@
 package org.terracotta.config;
 
 
-import org.terracotta.config.service.ServiceConfigParser;
 import org.terracotta.config.util.DefaultSubstitutor;
 import org.apache.commons.io.IOUtils;
 import org.terracotta.config.util.ParameterSubstitutor;
@@ -52,6 +51,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.List;
+import javax.xml.bind.JAXBElement;
+import org.terracotta.config.service.ServiceConfigParser;
+import org.terracotta.config.service.ExtendedConfigParser;
 
 public class TCConfigurationParser {
 
@@ -67,14 +69,20 @@ public class TCConfigurationParser {
   public static final String DEFAULT_DATA_BACKUP = "data-backup";
 
   private static final Map<URI, ServiceConfigParser> serviceParsers = new HashMap<>();
+  private static final Map<URI, ExtendedConfigParser> configParsers = new HashMap<>();
 
   private static TcConfiguration parseStream(InputStream in, ErrorHandler eh, String source, ClassLoader loader) throws IOException, SAXException {
     Collection<Source> schemaSources = new ArrayList<>();
 
-    for (ServiceConfigParser parser : loadConfigurationParserClasses(loader)) {
+    for (ServiceConfigParser parser : loadServiceConfigurationParserClasses(loader)) {
       schemaSources.add(parser.getXmlSchema());
       serviceParsers.put(parser.getNamespace(), parser);
     }
+    for (ExtendedConfigParser parser : loadConfigurationParserClasses(loader)) {
+      schemaSources.add(parser.getXmlSchema());
+      configParsers.put(parser.getNamespace(), parser);
+    }
+    
     schemaSources.add(new StreamSource(TERRACOTTA_XML_SCHEMA.openStream()));
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -108,49 +116,44 @@ public class TCConfigurationParser {
       DefaultSubstitutor.applyDefaults(tcConfig);
       applyPlatformDefaults(tcConfig, source);
 
-      Map<String, Map<String, ServiceOverride>> serviceOverrides = new HashMap<>();
-      for(Server server : tcConfig.getServers().getServer()) {
-        if(server.getServiceOverrides() != null && server.getServiceOverrides().getServiceOverride() != null) {
-          for(ServiceOverride serviceOverride : server.getServiceOverrides().getServiceOverride()) {
-            String id = ((Service)serviceOverride.getOverrides()).getId();
-            if(serviceOverrides.get(id) == null) {
-              serviceOverrides.put(id, new HashMap<>());
-            }
-            serviceOverrides.get(id).put(server.getName(), serviceOverride);
-          }
-        }
-      }
-
-      Map<String, List<ServiceProviderConfiguration>> serviceConfigurations = new HashMap<>();
-      if (tcConfig.getServices() != null && tcConfig.getServices().getService() != null) {
+      List<ServiceProviderConfiguration> serviceConfigurations = new ArrayList<>();
+      List<Object> configObjects = new ArrayList<>();
+      if (tcConfig.getPlugins()!= null && tcConfig.getPlugins().getConfigOrService()!= null) {
         //now parse the service configuration.
-        for (Service service : tcConfig.getServices().getService()) {
-          Element element = service.getAny();
+        for (JAXBElement<Service> service : tcConfig.getPlugins().getConfigOrService()) {
+          Element element = service.getValue().getAny();
           if (element != null) {
             URI namespace = URI.create(element.getNamespaceURI());
-            ServiceConfigParser parser = serviceParsers.get(namespace);
-            if (parser == null) {
-              throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
-            }
-            ServiceProviderConfiguration serviceProviderConfiguration = parser.parse(element, source);
-            for (Server server : tcConfig.getServers().getServer()) {
-              if (serviceConfigurations.get(server.getName()) == null) {
-                serviceConfigurations.put(server.getName(), new ArrayList<>());
-              }
-              if (serviceOverrides.get(service.getId()) != null && serviceOverrides.get(service.getId()).containsKey(server.getName())) {
-                Element overrideElement = serviceOverrides.get(service.getId()).get(server.getName()).getAny();
-                if(overrideElement != null) {
-                  serviceConfigurations.get(server.getName()).add(parser.parse(overrideElement, source));
+            String type = service.getName().getLocalPart();
+            switch (type.toLowerCase()) {
+              case "config":
+                {
+                  ExtendedConfigParser parser = configParsers.get(namespace);
+                  if (parser == null) {
+                    throw new TCConfigurationSetupException("Can't find parser for config " + namespace);
+                  }   
+                  Object co = parser.parse(element, source);
+                  configObjects.add(co);
+                  break;
                 }
-              } else {
-                serviceConfigurations.get(server.getName()).add(serviceProviderConfiguration);
-              }
+              case "service":
+                {
+                  ServiceConfigParser parser = serviceParsers.get(namespace);
+                  if (parser == null) {
+                    throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
+                  }   
+                  ServiceProviderConfiguration serviceProviderConfiguration = parser.parse(element, source);
+                  serviceConfigurations.add(serviceProviderConfiguration);
+                  break;
+                }
+              default:
+                throw new TCConfigurationSetupException("unknown plugin tag " + type);
             }
           }
         }
       }
 
-      return new TcConfiguration(tcConfig, source, serviceConfigurations);
+      return new TcConfiguration(tcConfig, source, configObjects, serviceConfigurations);
     } catch (JAXBException e) {
       throw new TCConfigurationSetupException(e);
     }
@@ -351,9 +354,12 @@ public class TCConfigurationParser {
     }
   }
 
-  private static ServiceLoader<ServiceConfigParser> loadConfigurationParserClasses(ClassLoader loader) {
+  private static ServiceLoader<ServiceConfigParser> loadServiceConfigurationParserClasses(ClassLoader loader) {
     return ServiceLoader.load(ServiceConfigParser.class,loader);
   }
   
-  
+
+  private static ServiceLoader<ExtendedConfigParser> loadConfigurationParserClasses(ClassLoader loader) {
+    return ServiceLoader.load(ExtendedConfigParser.class,loader);
+  }  
 }

@@ -25,7 +25,7 @@
   <fileSets>
     <fileSet>
       <outputDirectory>/</outputDirectory>
-      <directory>${project.build.directory}/generated-sources/xjc</directory>
+      <directory>${project.build.directory}/generated-sources/jaxb</directory>
       <excludes>
         <exclude>.staleFlag</exclude>
       </excludes>

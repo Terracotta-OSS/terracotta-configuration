@@ -21,26 +21,32 @@ package org.terracotta.config;
 import javax.xml.bind.JAXB;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.terracotta.entity.ServiceProviderConfiguration;
 
 public class TcConfiguration {
   private final TcConfig platformConfiguration;
 
-  private final Map<String, List<ServiceProviderConfiguration>> serviceConfigurations;
+  private final List<ServiceProviderConfiguration> serviceConfigurations;
+  private final List<Object> objects;
 
-  public TcConfiguration(TcConfig platformConfiguration, String source , Map<String, List<ServiceProviderConfiguration>> serviceConfigurations) {
+  public TcConfiguration(TcConfig platformConfiguration, String source , List<Object> objects, List<ServiceProviderConfiguration> serviceConfigurations) {
     this.platformConfiguration = platformConfiguration;
     this.serviceConfigurations = serviceConfigurations;
+    this.objects = objects;
   }
 
   public TcConfig getPlatformConfiguration() {
     return platformConfiguration;
   }
 
-  public Map<String, List<ServiceProviderConfiguration>> getServiceConfigurations() {
+  public List<ServiceProviderConfiguration> getServiceConfigurations() {
     return this.serviceConfigurations;
+  }
+  
+  public <T> List<T> getExtendedConfiguration(Class<T> type) {
+    return objects.stream().filter(o->type.isInstance(o)).map(o->type.cast(o)).collect(Collectors.toList());
   }
 
   @Override

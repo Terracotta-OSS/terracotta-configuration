@@ -19,20 +19,21 @@
   -->
 
 <tccon:tc-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xmlns:tccon="http://www.terracotta.org/config" xmlns:foo="http://www.example.com/foo">
+                 xmlns:tccon="http://www.terracotta.org/config" xmlns:foo="http://www.example.com/foo" xmlns:bar="http://www.example.com/bar">
 
-  <tccon:services>
-    <tccon:service id="foo">
+  <tccon:plugins>
+    <tccon:config>
+      <bar:bar name="bar"/>
+    </tccon:config>
+    <tccon:service>
       <foo:foo name="foo"/>
     </tccon:service>
-  </tccon:services>
+    <tccon:config>
+      <bar:bar name="baz"/>
+    </tccon:config>
+  </tccon:plugins>
   <tccon:servers>
     <tccon:server>
-      <tccon:service-overrides>
-        <tccon:service-override overrides="foo">
-          <foo:foo name="bar"/>
-        </tccon:service-override>
-      </tccon:service-overrides>
     </tccon:server>
   </tccon:servers>
 </tccon:tc-config>

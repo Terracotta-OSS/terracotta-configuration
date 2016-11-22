@@ -16,4 +16,4 @@
 #
 #
 
-org.terracotta.config.FooServiceConfigurationParser
+org.terracotta.config.BarConfigurationParser

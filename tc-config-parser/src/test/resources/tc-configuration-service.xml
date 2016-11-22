@@ -21,11 +21,11 @@
 <tccon:tc-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:tccon="http://www.terracotta.org/config" xmlns:foo="http://www.example.com/foo">
 
-  <tccon:services>
-    <tccon:service id="foo">
+  <tccon:plugins>
+    <tccon:service>
       <foo:foo name="foo"/>
     </tccon:service>
-  </tccon:services>
+  </tccon:plugins>
   <tccon:servers>
     <tccon:server>
     </tccon:server>
