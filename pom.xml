@@ -42,7 +42,7 @@
   <properties>
     <skip.testjar>true</skip.testjar>
     <java.build.version>1.8</java.build.version>
-    <terracotta-apis.version>1.2.0-pre8</terracotta-apis.version>
+    <terracotta-apis.version>1.2.0-pre9</terracotta-apis.version>
   </properties>
 
   <dependencyManagement>
