@@ -50,7 +50,7 @@ public class BarConfigurationParser implements ExtendedConfigParser {
   public Object parse(Element fragment, String source) {
     Bar foo = null;
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.example.bar");
+      JAXBContext jc = JAXBContext.newInstance("com.example.bar:org.terracotta.config");
       Unmarshaller u = jc.createUnmarshaller();
       foo = u.unmarshal(fragment, Bar.class).getValue();
       DefaultSubstitutor.applyDefaults(foo);

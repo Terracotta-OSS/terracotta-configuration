@@ -74,16 +74,33 @@
     </testResources>
     <plugins>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jaxb2-maven-plugin</artifactId>
+            <groupId>org.jvnet.jaxb2.maven2</groupId>
+            <artifactId>maven-jaxb2-plugin</artifactId>
+            <version>0.12.3</version>
             <executions>
                 <execution>
                     <id>test</id>
                     <goals>
-                        <goal>testXjc</goal>
+                        <goal>generate</goal>
                     </goals>
                 </execution>
             </executions>
+            <configuration>
+              <strict>false</strict>
+              <schemaDirectory>src/test/xsd</schemaDirectory>
+              <schemaIncludes>
+                <include>*.xsd</include>
+              </schemaIncludes>
+              <catalogs>
+                <catalog>
+                  <dependencyResource>
+                    <groupId>org.terracotta</groupId>
+                    <artifactId>tcconfig-schema</artifactId>
+                    <resource>catalog.cat</resource>
+                  </dependencyResource>
+                </catalog>
+              </catalogs>
+            </configuration>
         </plugin>
     </plugins>
   </build>

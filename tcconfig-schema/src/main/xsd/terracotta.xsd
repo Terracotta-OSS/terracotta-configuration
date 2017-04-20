@@ -21,6 +21,7 @@
 <xs:schema
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:tc="http://www.terracotta.org/config"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0"
     targetNamespace="http://www.terracotta.org/config"
     elementFormDefault="qualified"
     version="${project.version}">
@@ -104,7 +105,7 @@
   <xs:complexType name="services">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
       <xs:choice>
-        <xs:element name="config" type="tc:service"/>
+        <xs:element name="config" type="tc:config"/>
         <xs:element name="service" type="tc:service"/>
       </xs:choice>
     </xs:sequence>
@@ -116,11 +117,33 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="service">
-    <xs:choice>
-      <xs:any namespace="##other" minOccurs="0" maxOccurs="1" processContents="skip"/>
-    </xs:choice>
+  <xs:complexType name="config">
+    <xs:sequence>
+      <xs:element ref="tc:config-content" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
   </xs:complexType>
+
+  <xs:element name="config-content" abstract="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <jaxb:dom/>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="service">
+    <xs:sequence>
+      <xs:element ref="tc:service-content" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="service-content" abstract="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <jaxb:dom/>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
   
   <xs:complexType name="entity">
     <xs:sequence>

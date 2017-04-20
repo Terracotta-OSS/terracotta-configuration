@@ -36,9 +36,11 @@
 
 <xs:schema version="1.0"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tc="http://www.terracotta.org/config"
            elementFormDefault="qualified"
            targetNamespace="http://www.example.com/foo">
-  <xs:element name="foo">
+  <xs:import namespace="http://www.terracotta.org/config"/>
+  <xs:element name="foo" substitutionGroup="tc:service-content">
     <xs:complexType>
       <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
