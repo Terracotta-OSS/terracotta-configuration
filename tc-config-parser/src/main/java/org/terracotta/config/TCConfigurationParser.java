@@ -20,7 +20,6 @@ package org.terracotta.config;
 
 
 import org.terracotta.config.util.DefaultSubstitutor;
-import org.apache.commons.io.IOUtils;
 import org.terracotta.config.util.ParameterSubstitutor;
 import org.terracotta.entity.ServiceProviderConfiguration;
 import org.w3c.dom.Element;
@@ -266,14 +265,8 @@ public class TCConfigurationParser {
   }
 
   public static TcConfiguration parse(File file, ClassLoader loader) throws IOException, SAXException {
-    FileInputStream in = null;
-
-    try {
-      in = new FileInputStream(file);
+    try (FileInputStream in = new FileInputStream(file)) {
       return convert(in, file.getParent(), loader);
-    } finally {
-
-      IOUtils.closeQuietly(in);
     }
   }
   
