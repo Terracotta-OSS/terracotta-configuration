@@ -69,7 +69,7 @@ public class FooServiceConfigurationParser implements ServiceConfigParser {
   public ServiceProviderConfiguration parse(Element fragment, String source) {
     Foo foo = null;
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.example.foo");
+      JAXBContext jc = JAXBContext.newInstance("com.example.foo:org.terracotta.config");
       Unmarshaller u = jc.createUnmarshaller();
       foo = u.unmarshal(fragment, Foo.class).getValue();
       DefaultSubstitutor.applyDefaults(foo);
