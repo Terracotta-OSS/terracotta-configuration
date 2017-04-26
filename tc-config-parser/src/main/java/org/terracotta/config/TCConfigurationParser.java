@@ -51,22 +51,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.List;
-import javax.xml.bind.JAXBElement;
 import org.terracotta.config.service.ServiceConfigParser;
 import org.terracotta.config.service.ExtendedConfigParser;
 
 public class TCConfigurationParser {
 
   private static final SchemaFactory XSD_SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-  private static final URL TERRACOTTA_XML_SCHEMA = TCConfigurationParser.class.getResource("/terracotta.xsd");
+  public static final URL TERRACOTTA_XML_SCHEMA = TCConfigurationParser.class.getResource("/terracotta.xsd");
   private static final String WILDCARD_IP = "0.0.0.0";
   public static final short DEFAULT_GROUPPORT_OFFSET_FROM_TSAPORT = 20;
   public static final short DEFAULT_MANAGEMENTPORT_OFFSET_FROM_TSAPORT = 30;
   public static final int MIN_PORTNUMBER = 0x0FFF;
   public static final int MAX_PORTNUMBER = 0xFFFF;
   public static final String DEFAULT_LOGS = "logs";
-  public static final String DEFAULT_DATA = "data";
-  public static final String DEFAULT_DATA_BACKUP = "data-backup";
 
   private static final Map<URI, ServiceConfigParser> serviceParsers = new HashMap<>();
   private static final Map<URI, ExtendedConfigParser> configParsers = new HashMap<>();

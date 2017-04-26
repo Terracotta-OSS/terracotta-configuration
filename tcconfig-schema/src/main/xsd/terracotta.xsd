@@ -123,13 +123,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:element name="config-content" abstract="true">
-    <xs:annotation>
-      <xs:appinfo>
-        <jaxb:dom/>
-      </xs:appinfo>
-    </xs:annotation>
-  </xs:element>
+  <xs:element name="config-content" abstract="true"/>
 
   <xs:complexType name="service">
     <xs:sequence>
@@ -137,14 +131,8 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:element name="service-content" abstract="true">
-    <xs:annotation>
-      <xs:appinfo>
-        <jaxb:dom/>
-      </xs:appinfo>
-    </xs:annotation>
-  </xs:element>
-  
+  <xs:element name="service-content" abstract="true"/>
+
   <xs:complexType name="entity">
     <xs:sequence>
       <xs:element name="type" type="tc:qualified-class-name" minOccurs="1" maxOccurs="1" />

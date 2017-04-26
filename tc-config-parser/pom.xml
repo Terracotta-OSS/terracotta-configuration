@@ -65,7 +65,6 @@
     <testResources>
       <testResource>
         <directory>src/test/xsd/</directory>
-        <filtering>true</filtering>
       </testResource>
       <testResource>
         <directory>src/test/resources</directory>
@@ -73,35 +72,55 @@
       </testResource>
     </testResources>
     <plugins>
-          <plugin>
-            <groupId>org.jvnet.jaxb2.maven2</groupId>
-            <artifactId>maven-jaxb2-plugin</artifactId>
-            <version>0.12.3</version>
-            <executions>
-                <execution>
-                    <id>test</id>
-                    <goals>
-                        <goal>generate</goal>
-                    </goals>
-                </execution>
-            </executions>
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <strict>false</strict>
+          <schemaDirectory>src/test/xsd</schemaDirectory>
+          <catalogs>
+            <catalog>
+              <dependencyResource>
+                <groupId>org.terracotta</groupId>
+                <artifactId>tcconfig-schema</artifactId>
+                <resource>catalog.cat</resource>
+              </dependencyResource>
+            </catalog>
+          </catalogs>
+          <episodes>
+            <episode>
+              <groupId>org.terracotta</groupId>
+              <artifactId>tcconfig-schema</artifactId>
+            </episode>
+          </episodes>
+          <generateDirectory>${project.build.directory}/generated-test-sources/xjc</generateDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
             <configuration>
-              <strict>false</strict>
-              <schemaDirectory>src/test/xsd</schemaDirectory>
-              <schemaIncludes>
-                <include>*.xsd</include>
-              </schemaIncludes>
-              <catalogs>
-                <catalog>
-                  <dependencyResource>
-                    <groupId>org.terracotta</groupId>
-                    <artifactId>tcconfig-schema</artifactId>
-                    <resource>catalog.cat</resource>
-                  </dependencyResource>
-                </catalog>
-              </catalogs>
+              <tasks>
+                <delete dir="${project.build.directory}/generated-test-sources/xjc/org"/>
+              </tasks>
             </configuration>
-        </plugin>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
