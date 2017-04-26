@@ -34,10 +34,6 @@
   <packaging>jar</packaging>
   <name>tcconfig-schema</name>
 
-  <properties>
-    <skip.schema>true</skip.schema>
-  </properties>
-
   <build>
     <resources>
       <resource>
@@ -80,67 +76,6 @@
             <goals>
               <goal>run</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- generate schema -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2</version>
-        <executions>
-          <execution>
-            <id>generate-docflex</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <skip>${skip.schema}</skip>
-              <executable>${java.home}/bin/java</executable>
-              <arguments>
-                <argument>-Xmx512m</argument>
-                <argument>-cp</argument>
-                <argument>
-                  ${env.DOCFLEX_HOME}/lib/docflex-xml.jar${path.separator}${env.DOCFLEX_HOME}/lib/resolver.jar${path.separator}${env.DOCFLEX_HOME}/lib/xercesImpl.jar${path.separator}${env.DOCFLEX_HOME}/lib/xml-apis.jar
-                </argument>
-                <argument>com.docflex.xml.Generator</argument>
-                <argument>-template</argument>
-                <argument>${env.DOCFLEX_HOME}/templates/XSDDoc/FramedDoc.tpl</argument>
-                <argument>-format</argument>
-                <argument>HTML</argument>
-                <argument>-p:docTitle=Terracotta Configuration Schema Version ${project.version}</argument>
-                <argument>-d</argument>
-                <argument>${project.build.directory}/docflex</argument>
-                <argument>-f</argument>
-                <argument>index.html</argument>
-                <argument>-nodialog=true</argument>
-                <argument>-quiet=true</argument>
-                <argument>-launchviewer=false</argument>
-                <argument>target/terracotta-${project.version}.xsd</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.2</version>
-        <!--$NO-MVN-MAN-VER$-->
-        <executions>
-          <execution>
-            <id>assemble-docflex</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <descriptors>
-                <descriptor>${basedir}/src/assemble/docflex.xml</descriptor>
-              </descriptors>
-              <appendAssemblyId>true</appendAssemblyId>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -195,19 +130,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <profiles>
-    <profile>
-      <id>docflex</id>
-      <activation>
-        <file>
-          <exists>${env.DOCFLEX_HOME}</exists>
-        </file>
-      </activation>
-      <properties>
-        <skip.schema>false</skip.schema>
-      </properties>
-    </profile>
-  </profiles>
-
 </project>
