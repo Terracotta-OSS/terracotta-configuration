@@ -22,7 +22,5 @@
                  xmlns:tccon="http://www.terracotta.org/config">
 
   <tccon:plugins>
-    <tccon:service>
-    </tccon:service>
   </tccon:plugins>
 </tccon:tc-config>
