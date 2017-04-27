@@ -50,28 +50,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.List;
-import javax.xml.bind.JAXBElement;
 import org.terracotta.config.service.ServiceConfigParser;
 import org.terracotta.config.service.ExtendedConfigParser;
 
 public class TCConfigurationParser {
 
   private static final SchemaFactory XSD_SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-  private static final URL TERRACOTTA_XML_SCHEMA = TCConfigurationParser.class.getResource("/terracotta.xsd");
+  public static final URL TERRACOTTA_XML_SCHEMA = TCConfigurationParser.class.getResource("/terracotta.xsd");
   private static final String WILDCARD_IP = "0.0.0.0";
   public static final short DEFAULT_GROUPPORT_OFFSET_FROM_TSAPORT = 20;
   public static final short DEFAULT_MANAGEMENTPORT_OFFSET_FROM_TSAPORT = 30;
   public static final int MIN_PORTNUMBER = 0x0FFF;
   public static final int MAX_PORTNUMBER = 0xFFFF;
   public static final String DEFAULT_LOGS = "logs";
-  public static final String DEFAULT_DATA = "data";
-  public static final String DEFAULT_DATA_BACKUP = "data-backup";
 
   private static final Map<URI, ServiceConfigParser> serviceParsers = new HashMap<>();
   private static final Map<URI, ExtendedConfigParser> configParsers = new HashMap<>();
 
   private static TcConfiguration parseStream(InputStream in, ErrorHandler eh, String source, ClassLoader loader) throws IOException, SAXException {
     Collection<Source> schemaSources = new ArrayList<>();
+
+    schemaSources.add(new StreamSource(TERRACOTTA_XML_SCHEMA.openStream()));
 
     for (ServiceConfigParser parser : loadServiceConfigurationParserClasses(loader)) {
       schemaSources.add(parser.getXmlSchema());
@@ -81,8 +80,6 @@ public class TCConfigurationParser {
       schemaSources.add(parser.getXmlSchema());
       configParsers.put(parser.getNamespace(), parser);
     }
-    
-    schemaSources.add(new StreamSource(TERRACOTTA_XML_SCHEMA.openStream()));
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
@@ -119,35 +116,25 @@ public class TCConfigurationParser {
       List<Object> configObjects = new ArrayList<>();
       if (tcConfig.getPlugins()!= null && tcConfig.getPlugins().getConfigOrService()!= null) {
         //now parse the service configuration.
-        for (JAXBElement<Service> service : tcConfig.getPlugins().getConfigOrService()) {
-          Element element = service.getValue().getAny();
-          if (element != null) {
+        for (Object plugin : tcConfig.getPlugins().getConfigOrService()) {
+          if(plugin instanceof Service) {
+            Element element = ((Service) plugin).getServiceContent();
             URI namespace = URI.create(element.getNamespaceURI());
-            String type = service.getName().getLocalPart();
-            switch (type.toLowerCase()) {
-              case "config":
-                {
-                  ExtendedConfigParser parser = configParsers.get(namespace);
-                  if (parser == null) {
-                    throw new TCConfigurationSetupException("Can't find parser for config " + namespace);
-                  }   
-                  Object co = parser.parse(element, source);
-                  configObjects.add(co);
-                  break;
-                }
-              case "service":
-                {
-                  ServiceConfigParser parser = serviceParsers.get(namespace);
-                  if (parser == null) {
-                    throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
-                  }   
-                  ServiceProviderConfiguration serviceProviderConfiguration = parser.parse(element, source);
-                  serviceConfigurations.add(serviceProviderConfiguration);
-                  break;
-                }
-              default:
-                throw new TCConfigurationSetupException("unknown plugin tag " + type);
+            ServiceConfigParser parser = serviceParsers.get(namespace);
+            if (parser == null) {
+              throw new TCConfigurationSetupException("Can't find parser for service " + namespace);
             }
+            ServiceProviderConfiguration serviceProviderConfiguration = parser.parse(element, source);
+            serviceConfigurations.add(serviceProviderConfiguration);
+          } else if(plugin instanceof Config) {
+            Element element = ((Config) plugin).configContent;
+            URI namespace = URI.create(element.getNamespaceURI());
+            ExtendedConfigParser parser = configParsers.get(namespace);
+            if (parser == null) {
+              throw new TCConfigurationSetupException("Can't find parser for config " + namespace);
+            }
+            Object co = parser.parse(element, source);
+            configObjects.add(co);
           }
         }
       }

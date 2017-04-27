@@ -16,22 +16,13 @@
   ~
   -->
 
-<assembly>
-  <id>docflex</id>
-  <formats>
-    <format>zip</format>
-  </formats>
-  <includeBaseDirectory>false</includeBaseDirectory>
-  <fileSets>
-    <fileSet>
-      <outputDirectory>/</outputDirectory>
-      <directory>${project.build.directory}/docflex</directory>
-    </fileSet>
-  </fileSets>
-  <files>
-    <file>
-      <source>target/terracotta-${project.version}.xsd</source>
-      <outputDirectory>/</outputDirectory>
-    </file>
-  </files>  
-</assembly>
+<bindings version="2.0" xmlns="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <bindings schemaLocation="../xsd/terracotta.xsd">
+        <bindings node="//xs:element[@name='config-content']">
+            <dom/>
+        </bindings>
+        <bindings node="//xs:element[@name='service-content']">
+            <dom/>
+        </bindings>
+    </bindings>
+</bindings>
