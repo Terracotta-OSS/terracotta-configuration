@@ -202,8 +202,7 @@
         </xs:annotation>
       </xs:element>
       
-      <xs:element name="tsa-port" type="tc:bind-port" minOccurs="0" maxOccurs="1"
-                  default="9410">
+      <xs:element name="tsa-port" type="tc:bind-port" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
             On what port should the server listen for
@@ -212,7 +211,7 @@
             typically require 'root' privileges to use on
             Unix-style systems (Linux, Solaris).
 
-            Default:9510
+            Default:9410 - TCConfigDefaults.TSA_PORT
           </xs:documentation>
         </xs:annotation>
       </xs:element>
