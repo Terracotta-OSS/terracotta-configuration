@@ -116,4 +116,16 @@ public class TCConfigurationParserTest {
     FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.get(0);
     assertEquals("foo", serviceProviderConfiguration.getFoo().getName());  
   }
+
+  @Test
+  public void testDefaultServerPorts() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-default-settings.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+    TcConfig tcConfig = conf.getPlatformConfiguration();
+    List<Server> servers = tcConfig.getServers().getServer();
+    Server s = servers.get(0);
+    assertThat("Server tsa-port port should be 9410", s.getTsaPort().getValue(), is(9410));
+    assertThat("Server tsa-group-port port should be 9430", s.getTsaGroupPort().getValue(), is(9430));
+    assertThat("Server management-port port should be 9440", s.getManagementPort().getValue(), is(9440));
+  }
 }

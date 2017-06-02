@@ -203,7 +203,7 @@
       </xs:element>
       
       <xs:element name="tsa-port" type="tc:bind-port" minOccurs="0" maxOccurs="1"
-                  default="9510">
+                  default="9410">
         <xs:annotation>
           <xs:documentation>
             On what port should the server listen for
