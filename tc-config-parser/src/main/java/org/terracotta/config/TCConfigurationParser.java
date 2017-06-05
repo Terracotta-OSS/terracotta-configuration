@@ -58,8 +58,6 @@ public class TCConfigurationParser {
   private static final SchemaFactory XSD_SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
   public static final URL TERRACOTTA_XML_SCHEMA = TCConfigurationParser.class.getResource("/terracotta.xsd");
   private static final String WILDCARD_IP = "0.0.0.0";
-  public static final short DEFAULT_GROUPPORT_OFFSET_FROM_TSAPORT = 20;
-  public static final short DEFAULT_MANAGEMENTPORT_OFFSET_FROM_TSAPORT = 30;
   public static final int MIN_PORTNUMBER = 0x0FFF;
   public static final int MAX_PORTNUMBER = 0xFFFF;
   public static final String DEFAULT_LOGS = "logs";
@@ -158,7 +156,9 @@ public class TCConfigurationParser {
 
   private static void initializeTsaPort(Server server) {
     if(server.getTsaPort() == null) {
-      server.setTsaPort(new BindPort());
+      BindPort tsaPort = new BindPort();
+      tsaPort.setValue(TCConfigDefaults.TSA_PORT);
+      server.setTsaPort(tsaPort);
     }
     if (server.getTsaPort().getBind() == null) {
       server.getTsaPort().setBind(server.getBind());
@@ -196,7 +196,7 @@ public class TCConfigurationParser {
 
 
   public static int computeManagementPortFromTSAPort(int tsaPort) {
-    int tempPort = tsaPort + DEFAULT_MANAGEMENTPORT_OFFSET_FROM_TSAPORT;
+    int tempPort = tsaPort + TCConfigDefaults.MANAGEMENTPORT_OFFSET_FROM_TSAPORT;
     return ((tempPort <= MAX_PORTNUMBER) ? tempPort : (tempPort % MAX_PORTNUMBER) + MIN_PORTNUMBER);
   }
 
@@ -204,7 +204,7 @@ public class TCConfigurationParser {
     if (server.getTsaGroupPort() == null) {
       BindPort l2GrpPort = new BindPort();
       server.setTsaGroupPort(l2GrpPort);
-      int tempGroupPort = server.getTsaPort().getValue() + DEFAULT_GROUPPORT_OFFSET_FROM_TSAPORT;
+      int tempGroupPort = server.getTsaPort().getValue() + TCConfigDefaults.GROUPPORT_OFFSET_FROM_TSAPORT;
       int defaultGroupPort = ((tempGroupPort <= MAX_PORTNUMBER) ? (tempGroupPort) : (tempGroupPort % MAX_PORTNUMBER) + MIN_PORTNUMBER);
       l2GrpPort.setValue(defaultGroupPort);
       l2GrpPort.setBind(server.getBind());
