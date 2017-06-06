@@ -147,7 +147,6 @@ public class TCConfigurationParser {
     for(Server server : tcConfig.getServers().getServer()) {
       TCConfigurationParser.setDefaultBind(server);
       TCConfigurationParser.initializeTsaPort(server);
-      TCConfigurationParser.initializeManagementPort(server);
       TCConfigurationParser.initializeTsaGroupPort(server);
       TCConfigurationParser.initializeNameAndHost(server);
       TCConfigurationParser.initializeLogsDirectory(server, source);
@@ -179,25 +178,6 @@ public class TCConfigurationParser {
     }
 
     return out.getAbsolutePath();
-  }
-
-  private static void initializeManagementPort(Server server) {
-    if (server.getManagementPort() == null) {
-      BindPort managementPort = new BindPort();
-      server.setManagementPort(managementPort);
-      int defaultManagementPort = computeManagementPortFromTSAPort(server.getTsaPort().getValue());
-
-      managementPort.setValue(defaultManagementPort);
-      managementPort.setBind(server.getBind());
-    } else if (server.getManagementPort().getBind() == null) {
-      server.getManagementPort().setBind(server.getBind());
-    }
-  }
-
-
-  public static int computeManagementPortFromTSAPort(int tsaPort) {
-    int tempPort = tsaPort + TCConfigDefaults.MANAGEMENTPORT_OFFSET_FROM_TSAPORT;
-    return ((tempPort <= MAX_PORTNUMBER) ? tempPort : (tempPort % MAX_PORTNUMBER) + MIN_PORTNUMBER);
   }
 
   private static void initializeTsaGroupPort(Server server) {

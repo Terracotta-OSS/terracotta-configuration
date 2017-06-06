@@ -61,10 +61,7 @@ public class TCConfigurationParserTest {
     assertThat("Server tsa-port port should be 200", s.getTsaPort().getValue(), is(200));
     assertThat("Server tsa-port bind should be 0.0.0.0", s.getTsaPort().getBind(), is("0.0.0.0"));
 
-    assertThat("Server management-port port should be 210", s.getManagementPort().getValue(), is(210));
-    assertThat("Server management-port bind should be 0.0.0.0", s.getManagementPort().getBind(), is("0.0.0.0"));
-
-    assertThat("Server tsa-group-port port should be 220", s.getTsaGroupPort().getValue(), is(220));
+    assertThat("Server tsa-group-port port should be 220", s.getTsaGroupPort().getValue(), is(210));
     assertThat("Server tsa-group-port bind should be 0.0.0.0", s.getTsaGroupPort().getBind(), is("0.0.0.0"));
 
     TcProperties tCproperties = tcConfig.getTcProperties();
@@ -126,6 +123,5 @@ public class TCConfigurationParserTest {
     Server s = servers.get(0);
     assertThat("Server tsa-port port should be " + TCConfigDefaults.TSA_PORT, s.getTsaPort().getValue(), is(TCConfigDefaults.TSA_PORT));
     assertThat("Server tsa-group-port port should be " + TCConfigDefaults.GROUP_PORT, s.getTsaGroupPort().getValue(), is(TCConfigDefaults.GROUP_PORT));
-    assertThat("Server management-port port should be " + TCConfigDefaults.MANAGEMENT_PORT, s.getManagementPort().getValue(), is(TCConfigDefaults.MANAGEMENT_PORT));
   }
 }

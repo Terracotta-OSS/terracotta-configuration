@@ -30,8 +30,7 @@
     <tccon:server host="hostname" name="hostname1" bind="0.0.0.0">
       <tccon:logs>mylog</tccon:logs>
       <tccon:tsa-port bind="0.0.0.0">200</tccon:tsa-port>
-      <tccon:management-port bind="0.0.0.0">210</tccon:management-port>
-      <tccon:tsa-group-port bind="0.0.0.0">220</tccon:tsa-group-port>
+      <tccon:tsa-group-port bind="0.0.0.0">210</tccon:tsa-group-port>
     </tccon:server>
     <tccon:client-reconnect-window>200</tccon:client-reconnect-window>
   </tccon:servers>
