@@ -98,6 +98,8 @@
             </episode>
           </episodes>
           <generateDirectory>${project.build.directory}/generated-test-sources/xjc</generateDirectory>
+          <addCompileSourceRoot>false</addCompileSourceRoot>
+          <addTestCompileSourceRoot>true</addTestCompileSourceRoot>
         </configuration>
       </plugin>
       <plugin>
