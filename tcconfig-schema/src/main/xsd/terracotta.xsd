@@ -215,20 +215,6 @@
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="management-port" type="tc:bind-port" minOccurs="0" maxOccurs="1">
-        <xs:annotation>
-          <xs:documentation>
-            On what port should the server listen for
-            http/https connections for management?
-            This can be any port you like, but note
-            that ports below 1024 typically require 'root'
-            privileges to use on Unix-style systems (Linux,
-            Solaris).
-
-            Default: "tsa-port" + 30
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
       <xs:element name="tsa-group-port" type="tc:bind-port" minOccurs="0" maxOccurs="1">
         <xs:annotation>
           <xs:documentation>
