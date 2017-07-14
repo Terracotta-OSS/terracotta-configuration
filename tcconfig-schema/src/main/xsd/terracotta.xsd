@@ -175,8 +175,7 @@
     </xs:annotation>
 
     <xs:all>
-      <xs:element name="logs" type="tc:path" minOccurs="0"
-                  default="logs">
+      <xs:element name="logs" type="tc:path" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             In which directory should the server store its
@@ -187,17 +186,15 @@
             'artichoke'.
 
             If this is a relative path, then it is
-            interpreted relative to the current working
-            directory of the server (that is, the directory
-            you were in when you started server). It is thus
+            interpreted relative to the directory where the
+            server configuration file is. It is thus
             recommended that you specify an absolute path
             here.
 
-            Default: 'logs'
+            Default: 'logs/hostname-port'
 
             This places the 'logs' directory in the
-            directory you were in when you invoked
-            'start-tc-server'.
+            directory were your server configuration is.
           </xs:documentation>
         </xs:annotation>
       </xs:element>

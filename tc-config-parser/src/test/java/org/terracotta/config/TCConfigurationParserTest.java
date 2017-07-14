@@ -21,6 +21,7 @@ package org.terracotta.config;
 import com.example.bar.Bar;
 import org.junit.Test;
 import org.terracotta.config.FooServiceConfigurationParser.FooServiceProviderConfiguration;
+import org.terracotta.config.util.ParameterSubstitutor;
 import org.terracotta.entity.ServiceProviderConfiguration;
 
 import java.io.File;
@@ -111,11 +112,11 @@ public class TCConfigurationParserTest {
     assertThat("service configuration should not be null", serviceConfigurations, notNullValue());
     assertThat(serviceConfigurations.get(0), instanceOf(FooServiceProviderConfiguration.class));
     FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.get(0);
-    assertEquals("foo", serviceProviderConfiguration.getFoo().getName());  
+    assertEquals("foo", serviceProviderConfiguration.getFoo().getName());
   }
 
   @Test
-  public void testDefaultServerPorts() throws Exception {
+  public void testDefaults() throws Exception {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-default-settings.xml");
     TcConfiguration conf = TCConfigurationParser.parse(resource);
     TcConfig tcConfig = conf.getPlatformConfiguration();
@@ -123,5 +124,8 @@ public class TCConfigurationParserTest {
     Server s = servers.get(0);
     assertThat("Server tsa-port port should be " + TCConfigDefaults.TSA_PORT, s.getTsaPort().getValue(), is(TCConfigDefaults.TSA_PORT));
     assertThat("Server tsa-group-port port should be " + TCConfigDefaults.GROUP_PORT, s.getTsaGroupPort().getValue(), is(TCConfigDefaults.GROUP_PORT));
+
+    String defaultLogPath = resource.getPath() + "/logs/" + ParameterSubstitutor.getHostName() + "-" + TCConfigDefaults.TSA_PORT;
+    assertThat(s.getLogs(), is(defaultLogPath));
   }
 }
