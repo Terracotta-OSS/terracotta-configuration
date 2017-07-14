@@ -166,7 +166,7 @@ public class TCConfigurationParser {
 
   private static void initializeLogsDirectory(Server server, String source) {
     if(server.getLogs() == null) {
-      server.setLogs(DEFAULT_LOGS);
+      server.setLogs(DEFAULT_LOGS + "/%h-" + server.getTsaPort().getValue());
     }
     server.setLogs(getAbsolutePath(ParameterSubstitutor.substitute(server.getLogs()), new File(source!= null ? source: ".")));
   }
