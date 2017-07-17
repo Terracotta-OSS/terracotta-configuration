@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.terracotta.entity.ServiceProviderConfiguration;
+import org.terracotta.entity.StateDumpCollector;
+import org.terracotta.entity.StateDumpable;
 
-public class TcConfiguration {
+public class TcConfiguration implements StateDumpable {
   private final TcConfig platformConfiguration;
 
   private final List<ServiceProviderConfiguration> serviceConfigurations;
@@ -56,4 +58,12 @@ public class TcConfiguration {
     return sw.toString();
   }
 
+  @Override
+  public void addStateTo(final StateDumpCollector stateDumpCollector) {
+    for (Object config : objects){
+      if(config instanceof StateDumpable) {
+        ((StateDumpable)config).addStateTo(stateDumpCollector.subStateDumpCollector(config.getClass().getName()));
+      }
+    }
+  }
 }
