@@ -44,7 +44,6 @@ public class TCConfigurationParserTest {
     TcConfiguration conf = TCConfigurationParser.parse(resource);
     TcConfig tcConfig = conf.getPlatformConfiguration();
 
-    assertThat("servers should not be secured", tcConfig.getServers().isSecure(), is(false));
     assertThat("servers client reconnect window should be 200", tcConfig.getServers().getClientReconnectWindow(), is(200));
 
     List<Server> servers = tcConfig.getServers().getServer();
@@ -62,7 +61,7 @@ public class TCConfigurationParserTest {
     assertThat("Server tsa-port port should be 200", s.getTsaPort().getValue(), is(200));
     assertThat("Server tsa-port bind should be 0.0.0.0", s.getTsaPort().getBind(), is("0.0.0.0"));
 
-    assertThat("Server tsa-group-port port should be 220", s.getTsaGroupPort().getValue(), is(210));
+    assertThat("Server tsa-group-port port should be 210", s.getTsaGroupPort().getValue(), is(210));
     assertThat("Server tsa-group-port bind should be 0.0.0.0", s.getTsaGroupPort().getBind(), is("0.0.0.0"));
 
     TcProperties tCproperties = tcConfig.getTcProperties();

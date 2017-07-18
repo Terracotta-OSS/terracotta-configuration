@@ -260,7 +260,6 @@
       <xs:element name="server" type="tc:server" maxOccurs="unbounded" minOccurs="0" />
       <xs:element name="client-reconnect-window" type="tc:non-negative-int" minOccurs="0" maxOccurs="1" default="120" />
     </xs:sequence>
-    <xs:attribute name="secure" type="xs:boolean" use="optional" default="false" />
   </xs:complexType>
 
   <xs:complexType name="bind-port">

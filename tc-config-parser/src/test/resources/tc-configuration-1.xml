@@ -25,7 +25,7 @@
     <tccon:property name="name1" value="blah1"/>
   </tccon:tc-properties>
 
-  <tccon:servers secure="false">
+  <tccon:servers>
 
     <tccon:server host="hostname" name="hostname1" bind="0.0.0.0">
       <tccon:logs>mylog</tccon:logs>
