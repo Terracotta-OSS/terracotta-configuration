@@ -114,6 +114,13 @@ public class TCConfigurationParserTest {
     assertEquals("foo", serviceProviderConfiguration.getFoo().getName());
   }
 
+  @Test (expected = TCConfigurationSetupException.class)
+  public void testConfigAndServiceWithConfigurationErrors() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-config-service-with-errors.xml");
+    TCConfigurationParser.parse(resource.openStream());
+  }
+
+
   @Test
   public void testDefaults() throws Exception {
     URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-default-settings.xml");
