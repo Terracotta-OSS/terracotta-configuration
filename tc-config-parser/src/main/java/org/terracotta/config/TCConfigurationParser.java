@@ -19,6 +19,8 @@
 package org.terracotta.config;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terracotta.config.util.DefaultSubstitutor;
 import org.terracotta.config.util.ParameterSubstitutor;
 import org.terracotta.entity.ServiceProviderConfiguration;
@@ -56,6 +58,7 @@ import org.terracotta.config.service.ExtendedConfigParser;
 
 public class TCConfigurationParser {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(TCConfigurationParser.class);
   private static final SchemaFactory XSD_SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
   public static final URL TERRACOTTA_XML_SCHEMA = TCConfigurationParser.class.getResource("/terracotta.xsd");
   private static final String WILDCARD_IP = "0.0.0.0";
@@ -299,7 +302,7 @@ public class TCConfigurationParser {
 
     @Override
     public void warning(SAXParseException exception) throws SAXException {
-      errors.add(exception);
+      LOGGER.warn(exception.getLocalizedMessage());
     }
 
     public Collection<SAXParseException> getErrors() {
