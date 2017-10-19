@@ -194,7 +194,7 @@ public class TCConfigurationParser {
       out = new File(directoryLoadedFrom, substituted);
     }
 
-    return out.getAbsolutePath();
+    return out.toPath().normalize().toString();
   }
 
   private static void initializeTsaGroupPort(Server server) {
