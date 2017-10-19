@@ -30,7 +30,7 @@
 
   <groupId>org.terracotta.internal</groupId>
   <artifactId>tc-config-parent</artifactId>
-  <version>10.4-SNAPSHOT</version>
+  <version>10.4.0-pre5</version>
   <packaging>pom</packaging>
   <name>tc-config-parent</name>
 
