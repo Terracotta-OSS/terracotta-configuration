@@ -9,5 +9,6 @@ target/
 .DS_Store
 /bin/
 *~
+*.sh
 
 nb-configuration.xml
