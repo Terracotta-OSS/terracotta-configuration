@@ -38,15 +38,6 @@
           </xs:annotation>
         </xs:element>
         
-        <xs:element name="entities" type="tc:entities" minOccurs="0">
-          <xs:annotation>
-            <xs:documentation xml:lang="en">
-              This section defines the list of entities that have the lifecycle of the server.  Unlike entities created by 
-              a client, these entities cannot be deleted.  
-            </xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        
         <xs:element name="tc-properties" type="tc:tc-properties" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
@@ -111,12 +102,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="entities">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="entity" type="tc:entity"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="config">
     <xs:sequence>
       <xs:element ref="tc:config-content" minOccurs="1" maxOccurs="1"/>
@@ -132,28 +117,6 @@
   </xs:complexType>
 
   <xs:element name="service-content" abstract="true"/>
-
-  <xs:complexType name="entity">
-    <xs:sequence>
-      <xs:element name="type" type="tc:qualified-class-name" minOccurs="1" maxOccurs="1" />
-      <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="version" type="tc:non-negative-int" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="configuration" minOccurs="0" maxOccurs="1"> 
-        <xs:complexType>
-            <xs:choice>
-              <xs:any namespace="##other" minOccurs="0" maxOccurs="1" processContents="skip"/>
-              <xs:element name="properties">
-                  <xs:complexType>
-                      <xs:sequence>
-                          <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
-                      </xs:sequence>
-                  </xs:complexType>
-              </xs:element>
-            </xs:choice>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
 
   <xs:complexType name="tc-properties">
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -363,13 +326,6 @@
       <xs:whiteSpace value="collapse" />
       <xs:minLength value="1" />
       <xs:maxLength value="255" />
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="qualified-class-name">
-    <xs:restriction base="xs:token">
-      <xs:pattern
-          value="[A-Za-z_][A-Za-z_0-9$]*(\.[A-Za-z_][A-Za-z_0-9$]*)*" />
     </xs:restriction>
   </xs:simpleType>
 
