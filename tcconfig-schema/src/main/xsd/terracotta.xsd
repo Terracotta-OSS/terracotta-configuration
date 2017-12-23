@@ -54,6 +54,18 @@
           </xs:annotation>
         </xs:element>
 
+        <xs:element name="failover-priority" type="tc:failover-priority" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              This section defines the failover priority of the cluster.
+              If configured for consistency then the cluster will try to preserve
+              consistency over availability when a failover is required.
+              If configured for availability then the cluster will try to remain available
+              even at the cost of consistency, risking split brain scenarios as well.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
         <xs:element name="servers" type="tc:servers" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
@@ -129,7 +141,24 @@
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="value" type="xs:string" use="required"/>
   </xs:complexType>
-  
+
+  <xs:complexType name="failover-priority">
+    <xs:choice>
+      <xs:element name="consistency" type="tc:consistency"/>
+      <xs:element name="availability" type="xs:string" fixed=""/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="consistency">
+    <xs:all>
+      <xs:element name="voter" type="tc:voter" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="voter">
+    <xs:attribute name="count" type="tc:non-negative-int" use="required"/>
+  </xs:complexType>
+
   <xs:complexType name="server">
     <xs:annotation>
       <xs:documentation xmlns="http://www.w3.org/1999/xhtml">

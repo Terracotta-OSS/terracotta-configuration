@@ -28,9 +28,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -133,5 +131,35 @@ public class TCConfigurationParserTest {
 
     String defaultLogPath = resource.getPath() + "/logs/" + ParameterSubstitutor.getHostName() + "-" + TCConfigDefaults.TSA_PORT;
     assertThat(s.getLogs(), is(defaultLogPath));
+  }
+
+  @Test
+  public void testFailoverPriorityAvailability() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-config-failover-availability.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+    TcConfig tcConfig = conf.getPlatformConfiguration();
+    assertThat(tcConfig.getFailoverPriority().getAvailability(), notNullValue());
+  }
+
+  @Test
+  public void testFailoverPriorityConsistency() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-config-failover-consistency.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+    TcConfig tcConfig = conf.getPlatformConfiguration();
+    Consistency consistency = tcConfig.getFailoverPriority().getConsistency();
+    assertThat(consistency, notNullValue());
+    assertThat(consistency.getVoter(), nullValue());
+  }
+
+  @Test
+  public void testFailoverPriorityConsistencyVoters() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-config-failover-consistency-voters.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+    TcConfig tcConfig = conf.getPlatformConfiguration();
+    Consistency consistency = tcConfig.getFailoverPriority().getConsistency();
+    assertThat(consistency, notNullValue());
+    Voter voter = consistency.getVoter();
+    assertThat(voter, notNullValue());
+    assertThat(voter.getCount(), is(2));
   }
 }
