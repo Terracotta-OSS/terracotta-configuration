@@ -18,7 +18,6 @@
 
 package org.terracotta.config;
 
-import com.example.bar.Bar;
 import org.junit.Test;
 import org.terracotta.config.FooServiceConfigurationParser.FooServiceProviderConfiguration;
 import org.terracotta.config.util.ParameterSubstitutor;
@@ -26,9 +25,13 @@ import org.terracotta.entity.ServiceProviderConfiguration;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -129,7 +132,7 @@ public class TCConfigurationParserTest {
     assertThat("Server tsa-port port should be " + TCConfigDefaults.TSA_PORT, s.getTsaPort().getValue(), is(TCConfigDefaults.TSA_PORT));
     assertThat("Server tsa-group-port port should be " + TCConfigDefaults.GROUP_PORT, s.getTsaGroupPort().getValue(), is(TCConfigDefaults.GROUP_PORT));
 
-    String defaultLogPath = resource.getPath() + "/logs/" + ParameterSubstitutor.getHostName() + "-" + TCConfigDefaults.TSA_PORT;
+    String defaultLogPath = Paths.get(resource.toURI()).resolve("logs").resolve(ParameterSubstitutor.getHostName() + "-" + TCConfigDefaults.TSA_PORT).toString();
     assertThat(s.getLogs(), is(defaultLogPath));
   }
 
