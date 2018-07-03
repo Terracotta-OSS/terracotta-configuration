@@ -18,7 +18,7 @@
 
 package org.terracotta.config;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.terracotta.config.FooServiceConfigurationParser.FooServiceProviderConfiguration;
 import org.terracotta.config.util.ParameterSubstitutor;
 import org.terracotta.entity.ServiceProviderConfiguration;
@@ -33,7 +33,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class TCConfigurationParserTest {
 
@@ -115,10 +117,12 @@ public class TCConfigurationParserTest {
     assertEquals("foo", serviceProviderConfiguration.getFoo().getName());
   }
 
-  @Test (expected = TCConfigurationSetupException.class)
+  @Test
   public void testConfigAndServiceWithConfigurationErrors() throws Exception {
-    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-config-service-with-errors.xml");
-    TCConfigurationParser.parse(resource.openStream());
+    assertThrows(TCConfigurationSetupException.class, () -> {
+      URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-config-service-with-errors.xml");
+      TCConfigurationParser.parse(resource.openStream());
+    });
   }
 
 
