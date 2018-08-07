@@ -165,4 +165,23 @@ public class TCConfigurationParserTest {
     assertThat(voter, notNullValue());
     assertThat(voter.getCount(), is(2));
   }
+
+  @Test
+  public void testTCParserWithServerHavingOnlyBindAttribute() throws Exception {
+    URL resource = Thread.currentThread()
+                         .getContextClassLoader()
+                         .getResource("tc-configuration-server-with-only-bind-attribute.xml");
+    TcConfiguration conf = TCConfigurationParser.parse(resource);
+    TcConfig tcConfig = conf.getPlatformConfiguration();
+
+    List<Server> servers = tcConfig.getServers().getServer();
+    assertThat("Server configuration should not be null", servers, notNullValue());
+    assertThat("Number of servers should be 1", servers.size(), is(1));
+
+    Server s = servers.get(0);
+
+    assertThat("Server hostname should be 127.0.0.1", s.getHost(), is("127.0.0.1"));
+    assertThat("Server bind port should be 127.0.0.1", s.getBind(), is("127.0.0.1"));
+    assertThat("Server name should be 127.0.0.1:9410", s.getName(), is("127.0.0.1:9410"));
+  }
 }

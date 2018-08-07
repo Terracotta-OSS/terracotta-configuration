@@ -212,10 +212,12 @@ public class TCConfigurationParser {
 
   private static void initializeNameAndHost(Server server) {
     if (server.getHost() == null || server.getHost().trim().length() == 0) {
-      if (server.getName() == null) {
-        server.setHost("%i");
-      } else {
+      if (server.getName() != null) {
         server.setHost(server.getName());
+      } else if (!WILDCARD_IP.equals(server.getBind())) {
+        server.setHost(server.getBind());
+      } else {
+        server.setHost("%i");
       }
     }
 
