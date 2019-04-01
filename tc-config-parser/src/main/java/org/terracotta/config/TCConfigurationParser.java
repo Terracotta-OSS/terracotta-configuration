@@ -21,6 +21,7 @@ package org.terracotta.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terracotta.config.service.ConfigValidator;
 import org.terracotta.config.util.DefaultSubstitutor;
 import org.terracotta.config.util.ParameterSubstitutor;
 import org.terracotta.entity.ServiceProviderConfiguration;
@@ -284,6 +285,18 @@ public class TCConfigurationParser {
   
   public static TcConfiguration parse(InputStream in, Collection<SAXParseException> errors, String source, ClassLoader loader) throws IOException, SAXException {
     return parseStream(in, source, loader);
+  }
+
+  public static ConfigValidator getValidator(URI namespace) {
+    ServiceConfigParser parserObject = serviceParsers.get(namespace);
+    if (parserObject != null) {
+      return parserObject.getConfigValidator();
+    }
+    ExtendedConfigParser extendedConfigParser = configParsers.get(namespace);
+    if (extendedConfigParser != null) {
+      return extendedConfigParser.getConfigValidator();
+    }
+    return null;
   }
 
   private static class CollectingErrorHandler implements ErrorHandler {
