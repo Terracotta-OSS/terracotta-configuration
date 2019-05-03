@@ -50,4 +50,13 @@ public interface ExtendedConfigParser {
    * @return service configuration
    */
    Object parse(Element fragment, String source);
+
+  /**
+   * Get the validator for the XMLElement
+   *
+   * @return {@link ConfigValidator}.
+   */
+  default ConfigValidator getConfigValidator() {
+    return ConfigValidator.NOOP_VALIDATOR;
+  }
 }
