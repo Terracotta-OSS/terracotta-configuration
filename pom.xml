@@ -37,7 +37,6 @@
   <modules>
     <module>tcconfig-schema</module>
     <module>tc-config-parser</module>
-    <module>configuration-provider</module>
   </modules>
 
   <properties>
