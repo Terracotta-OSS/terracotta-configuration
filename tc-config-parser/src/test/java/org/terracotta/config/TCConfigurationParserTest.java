@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.terracotta.config.FooServiceConfigurationParser.FooServiceProviderConfiguration;
 import org.terracotta.config.util.ParameterSubstitutor;
 import org.terracotta.entity.ServiceProviderConfiguration;
+import org.w3c.dom.Element;
 
 import java.io.File;
 import java.net.URL;
@@ -113,6 +114,14 @@ public class TCConfigurationParserTest {
     assertThat(serviceConfigurations.get(0), instanceOf(FooServiceProviderConfiguration.class));
     FooServiceProviderConfiguration serviceProviderConfiguration = (FooServiceProviderConfiguration) serviceConfigurations.get(0);
     assertEquals("foo", serviceProviderConfiguration.getFoo().getName());
+  }
+
+  @Test
+  public void testGetRootOfConfigXml() throws Exception {
+    URL resource = Thread.currentThread().getContextClassLoader().getResource("tc-configuration-config-service.xml");
+    Element element = TCConfigurationParser.getRoot(resource);
+    assertThat(element, notNullValue());
+    
   }
 
   @Test (expected = TCConfigurationSetupException.class)

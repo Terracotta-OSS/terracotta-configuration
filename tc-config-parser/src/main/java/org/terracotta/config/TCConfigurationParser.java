@@ -245,6 +245,61 @@ public class TCConfigurationParser {
     return parseStream(bais, path, loader);
   }
   
+  private static Element getRootOfXml(InputStream in, ClassLoader loader) throws IOException, SAXException {
+    Collection<Source> schemaSources = new ArrayList<>();
+
+    schemaSources.add(new StreamSource(TERRACOTTA_XML_SCHEMA.openStream()));
+
+    if (serviceParsers.isEmpty()) {
+      for (ServiceConfigParser parser : loadServiceConfigurationParserClasses(loader)) {
+        serviceParsers.put(parser.getNamespace(), parser);
+      }
+    }
+
+    if (configParsers.isEmpty()) {
+      for (ExtendedConfigParser parser : loadConfigurationParserClasses(loader)) {
+        configParsers.put(parser.getNamespace(), parser);
+      }
+    }
+
+    for (Map.Entry<URI, ExtendedConfigParser> entry : configParsers.entrySet()) {
+      schemaSources.add(entry.getValue().getXmlSchema());
+    }
+
+    for (Map.Entry<URI, ServiceConfigParser> entry : serviceParsers.entrySet()) {
+      schemaSources.add(entry.getValue().getXmlSchema());
+    }
+
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(true);
+    factory.setIgnoringComments(true);
+    factory.setIgnoringElementContentWhitespace(true);
+    factory.setSchema(XSD_SCHEMA_FACTORY.newSchema(schemaSources.toArray(new Source[schemaSources.size()])));
+
+    final DocumentBuilder domBuilder;
+    try {
+      domBuilder = factory.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      throw new AssertionError(e);
+    }
+    CollectingErrorHandler errorHandler = new CollectingErrorHandler();
+    domBuilder.setErrorHandler(errorHandler);
+    final Element config = domBuilder.parse(in).getDocumentElement();
+
+    Collection<SAXParseException> parseErrors = errorHandler.getErrors();
+    if(parseErrors.size() != 0) {
+      StringBuffer buf = new StringBuffer("Couldn't parse configuration file, there are " + parseErrors.size() + " error(s).\n");
+      int i = 1;
+      for (SAXParseException parseError : parseErrors) {
+        buf.append(" [" + i + "] Line " + parseError.getLineNumber() + ", column " + parseError.getColumnNumber() + ": " + parseError.getMessage()
+                   + "\n");
+        i++;
+      }
+      throw new TCConfigurationSetupException(buf.toString());
+    }
+    return config;
+  }
+
   public static TcConfiguration parse(File f)  throws IOException, SAXException {
     return parse(f, Thread.currentThread().getContextClassLoader());
   }
@@ -255,6 +310,29 @@ public class TCConfigurationParser {
     }
   }
   
+  public static Element getRoot(File file, ClassLoader loader) throws IOException, SAXException {
+    try (FileInputStream in = new FileInputStream(file)) {
+      return getRootOfXml(in, loader);
+    }
+  }
+
+  public static Element getRoot(InputStream in, ClassLoader loader) throws IOException, SAXException {
+    byte[] data = new byte[in.available()];
+    in.read(data);
+    in.close();
+    ByteArrayInputStream bais = new ByteArrayInputStream(data);
+
+    return getRootOfXml(bais, loader);
+  }
+
+  public static Element getRoot(URL url, ClassLoader loader) throws IOException, SAXException {
+    return getRoot(url.openStream(), loader);
+  }
+
+  public static Element getRoot(URL url) throws IOException, SAXException {
+    return getRoot(url.openStream(), Thread.currentThread().getContextClassLoader());
+  }
+
   public static TcConfiguration parse(String xmlText) throws IOException, SAXException {
     return parse(xmlText, Thread.currentThread().getContextClassLoader());
   }
