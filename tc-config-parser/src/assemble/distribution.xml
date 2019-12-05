@@ -17,17 +17,21 @@
   -->
 
 <assembly>
-  <id>sources</id>
+  <id>distribution</id>
   <formats>
-    <format>jar</format>
+    <format>tar.gz</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <outputDirectory>/</outputDirectory>
-      <directory>${project.build.directory}/generated-sources/xjc</directory>
+      <directory>${project.build.directory}</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>*.jar</include>
+        <include>${project.build.finalName}/*</include>
+      </includes>
       <excludes>
-        <exclude>.staleFlag</exclude>
+        <exclude>*sources.jar</exclude>
       </excludes>
     </fileSet>
   </fileSets>
