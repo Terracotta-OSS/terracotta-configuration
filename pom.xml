@@ -43,6 +43,8 @@
     <skip.testjar>true</skip.testjar>
     <java.build.version>1.8</java.build.version>
     <terracotta-apis.version>1.8.2</terracotta-apis.version>
+    <slf4j.base.version>1.7.7</slf4j.base.version>
+    <slf4j.range.version>[${slf4j.base.version},1.7.9999)</slf4j.range.version>
   </properties>
 
   <dependencyManagement>
@@ -50,7 +52,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.7</version>
+        <version>${slf4j.range.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
